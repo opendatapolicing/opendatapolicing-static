@@ -5815,4 +5815,4 @@ module.exports = Url;
 });
 
 
-//# sourceMappingURL=sockjs.js.map
+//# sourceMappingURL=sockjs-map.json

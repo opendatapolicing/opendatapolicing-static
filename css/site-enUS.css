@@ -110,7 +110,6 @@ textarea {
 	max-width: 100%;
 	/* just in case, to force correct aspect ratio */
 	height: auto !important;
-	width: auto\9; /* ie8+9 */
 	/* lt ie8 */
 	-ms-interpolation-mode: bicubic;
 }
