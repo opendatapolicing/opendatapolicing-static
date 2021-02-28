@@ -1,9 +1,9 @@
 {
   "startNum" : 0,
-  "foundNum" : 272,
-  "returnedNum" : 272,
+  "foundNum" : 276,
+  "returnedNum" : 276,
   "searchTime" : "0.000 sec",
-  "transmissionTime" : "0.037 sec",
+  "transmissionTime" : "0.040 sec",
   "list" : [ {
     "pk" : "1416",
     "inheritPk" : "20",
@@ -348,19 +348,6 @@
     "sort3" : "6.0",
     "sort4" : "0.0"
   }, {
-    "pk" : "9092",
-    "created" : "2021-02-25T17:06:41.292-05:00[America/New_York]",
-    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "created", "htmlBefore", "sort4", "htmlAfter", "userId", "sort3", "sort1", "htmlVar", "sort2", "pageDesignKeys" ],
-    "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "<script>//<![CDATA[\n  $.get( \"",
-    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.range.start=1990-01-01T00:00:00.000Z&facet.range.end=NOW&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles\", function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitles.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitles[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = b == 0 ? 0 : (a / b);\n        var itemRangeValues = { x: parseInt(rangeData.value.substr(0, rangeData.value.indexOf('-'))), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        .forceY([0, 1])\n        ;\n\n      chart.xAxis\n        .axisLabel('Year')\n        .tickFormat(d3.format('.0d'))\n        ;\n\n      chart.yAxis\n        .axisLabel('Percentage of stops by race')\n        .tickFormat(d3.format('%'));\n        ;\n\n      d3.select('#svg1')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n//]]></script>",
-    "htmlVar" : "siteBaseUrl",
-    "sort1" : "0.0",
-    "sort2" : "1.0",
-    "sort3" : "6.0",
-    "sort4" : "1.0"
-  }, {
     "pk" : "1426",
     "inheritPk" : "30",
     "created" : "2020-08-05T15:49:22.551-04:00[America/New_York]",
@@ -391,6 +378,21 @@
     "htmlExclude" : false,
     "pdfExclude" : false,
     "loginLogout" : false,
+    "sort1" : "0.0",
+    "sort2" : "1.0",
+    "sort3" : "6.0",
+    "sort4" : "2.0",
+    "sort5" : "1.0"
+  }, {
+    "pk" : "1666",
+    "created" : "2021-02-18T21:42:40.238-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "userKey" : "1",
+    "saves" : [ "htmlAfter", "sort5", "htmlBefore", "userId", "created", "sort4", "sort3", "sort1", "htmlVar", "userKey", "sort2", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgStopCountPie(year) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles\" + (year ? (\"&fq=stopYear:\" + year) : \"\"), function( searchData ) {\n    var graphData = [];\n    var facetTotal = 0;\n    for (i = 0; i < searchData.facet_fields.personRaceTitles.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitles[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      facetTotal += a;\n    }\n    for (i = 0; i < searchData.facet_fields.personRaceTitles.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitles[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      var c = facetTotal == 0 ? 0 : (a / facetTotal);\n      var itemData = { label: fieldLabel, value: c };\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.pieChart()\n        .x(function(d) { return d.label })\n        .y(function(d) { return d.value })\n        .showLabels(true)\n        .labelThreshold(.05)\n        .labelType('percent')\n        .donut(true)\n        .donutRatio(0.35)\n        ;\n\n      d3.select('#svgStopCountPie')\n        .datum(graphData)\n        .transition().duration(350)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgStopCountPie();\n//]]></script>\n",
+    "htmlVar" : "siteBaseUrl",
     "sort1" : "0.0",
     "sort2" : "1.0",
     "sort3" : "6.0",
@@ -498,6 +500,20 @@
     "sort4" : "2.0",
     "sort5" : "2.0",
     "sort6" : "3.0"
+  }, {
+    "pk" : "9092",
+    "created" : "2021-02-25T17:06:41.292-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "saves" : [ "userId", "sort4", "sort3", "sort1", "htmlVar", "sort2", "sort5", "htmlAfter", "htmlBefore", "created", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgStopCountPercent(year) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.range.start=1990-01-01T00:00:00.000Z&facet.range.end=NOW&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles\", function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitles.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitles[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = b == 0 ? 0 : (a / b);\n        var itemRangeValues = { x: parseInt(rangeData.value.substr(0, rangeData.value.indexOf('-'))), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        .forceY([0, 1])\n        ;\n\n      chart.xAxis\n        .axisLabel('Year')\n        .tickFormat(d3.format('.0d'))\n        ;\n\n      chart.yAxis\n        .axisLabel('Percentage of stops by race')\n        .tickFormat(d3.format('%'));\n        ;\n\n      d3.select('#svgStopCountPercent')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgStopCountPercent();\n//]]></script>",
+    "htmlVar" : "siteBaseUrl",
+    "sort1" : "0.0",
+    "sort2" : "1.0",
+    "sort3" : "6.0",
+    "sort4" : "2.0",
+    "sort5" : "2.0"
   }, {
     "pk" : "1433",
     "inheritPk" : "38",
@@ -641,6 +657,20 @@
     "sort5" : "3.0",
     "sort6" : "4.0"
   }, {
+    "pk" : "2243",
+    "created" : "2021-02-23T21:30:52.090-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "saves" : [ "htmlAfter", "userId", "created", "sort4", "sort3", "sort1", "htmlVar", "sort2", "htmlBefore", "sort5", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgStopCountTotal(stopPurposeTitle) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.range.start=1999-12-30T00:00:00.000Z&facet.range.end=2000-02-01T00:00:00.000Z&facet.range.gap=%2B1DAY&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles\" + (stopPurposeTitle ? (\"&fq=stopPurposeTitle:\" + stopPurposeTitle) : \"\"), function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitles.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitles[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = a;\n        var itemRangeValues = { x: new Date(rangeData.value), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        ;\n\n      chart.xAxis\n        .axisLabel('Date')\n        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); })\n        ;\n\n      chart.yAxis\n        .axisLabel('Stops by race')\n        ;\n\n      d3.select('#svgStopCountTotal')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgStopCountTotal();\n//]]></script>",
+    "htmlVar" : "siteBaseUrl",
+    "sort1" : "0.0",
+    "sort2" : "1.0",
+    "sort3" : "6.0",
+    "sort4" : "2.0",
+    "sort5" : "3.0"
+  }, {
     "pk" : "1440",
     "inheritPk" : "46",
     "created" : "2020-10-27T21:43:47.628-04:00[America/New_York]",
@@ -742,6 +772,20 @@
     "sort4" : "2.0",
     "sort5" : "4.0",
     "sort6" : "2.5"
+  }, {
+    "pk" : "9104",
+    "created" : "2021-02-27T21:17:37.538-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "saves" : [ "htmlBefore", "htmlAfter", "userId", "sort4", "sort3", "sort1", "htmlVar", "created", "sort5", "sort2", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgSearchCountTotal(searchTypeTitle) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-search?rows=0&facet=true&facet.range.start=1999-12-30T00:00:00.000Z&facet.range.end=2000-02-01T00:00:00.000Z&facet.range.gap=%2B1DAY&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle\" + (searchTypeTitle ? (\"&fq=searchTypeTitle:\" + searchTypeTitle) : \"\"), function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitle.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitle[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = a;\n        var itemRangeValues = { x: new Date(rangeData.value), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        ;\n\n      chart.xAxis\n        .axisLabel('Date')\n        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); })\n        ;\n\n      chart.yAxis\n        .axisLabel('Stops by race')\n        ;\n\n      d3.select('#svgSearchCountTotal')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgSearchCountTotal();\n//]]></script>\n",
+    "htmlVar" : "siteBaseUrl",
+    "sort1" : "0.0",
+    "sort2" : "1.0",
+    "sort3" : "6.0",
+    "sort4" : "2.0",
+    "sort5" : "4.0"
   }, {
     "pk" : "1445",
     "inheritPk" : "50",
@@ -940,32 +984,47 @@
     "sort3" : "6.0",
     "sort4" : "2.0"
   }, {
-    "pk" : "1666",
-    "created" : "2021-02-18T21:42:40.238-05:00[America/New_York]",
+    "pk" : "9105",
+    "created" : "2021-02-27T21:47:46.384-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "userKey" : "1",
-    "saves" : [ "htmlAfter", "htmlBefore", "userId", "created", "sort4", "sort3", "sort1", "htmlVar", "userKey", "sort2", "pageDesignKeys" ],
+    "saves" : [ "userId", "htmlBefore", "sort4", "sort3", "sort1", "htmlVar", "sort2", "sort5", "created", "htmlAfter", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "<script>//<![CDATA[\nfunction svgStopCountPie(year) {\n  $.get( \"",
-    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles\" + (year ? (\"&fq=stopYear:\" + year) : \"\"), function( searchData ) {\n    var graphData = [];\n    var facetTotal = 0;\n    for (i = 0; i < searchData.facet_fields.personRaceTitles.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitles[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      facetTotal += a;\n    }\n    for (i = 0; i < searchData.facet_fields.personRaceTitles.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitles[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      var c = facetTotal == 0 ? 0 : (a / facetTotal);\n      var itemData = { label: fieldLabel, value: c };\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.pieChart()\n        .x(function(d) { return d.label })\n        .y(function(d) { return d.value })\n        .showLabels(true)\n        .labelThreshold(.05)\n        .labelType('percent')\n        .donut(true)\n        .donutRatio(0.35)\n        ;\n\n      d3.select('#svgStopCountPie')\n        .datum(graphData)\n        .transition().duration(350)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgStopCountPie();\n//]]></script>\n",
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgSearchRatePercentOfStops(year) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.range.start=1990-01-01T00:00:00.000Z&facet.range.end=NOW&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,trafficSearchRaceTitles\", function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot['personRaceTitles,trafficSearchRaceTitles'].length; i++) {\n      var pivotData = searchData.facet_pivot['personRaceTitles,trafficSearchRaceTitles'][i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = 0;\n        if(pivotData.pivot) {\n          var trafficSearchRaceTitleData = pivotData.pivot.find(x => x.value === pivotData.value);\n          if(trafficSearchRaceTitleData)\n            a = trafficSearchRaceTitleData.count;\n        }\n        var b = rangeData.count;\n        var c = b == 0 ? 0 : (a / b);\n        var itemRangeValues = { x: parseInt(rangeData.value.substr(0, rangeData.value.indexOf('-'))), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        ;\n\n      chart.xAxis\n        .axisLabel('Year')\n        .tickFormat(d3.format('.0d'))\n        ;\n\n      chart.yAxis\n        .axisLabel('Percentage of stops by race')\n        .tickFormat(d3.format('%'));\n        ;\n\n      d3.select('#svgSearchRatePercentOfStops')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgSearchRatePercentOfStops();\n//]]></script>\n",
     "htmlVar" : "siteBaseUrl",
     "sort1" : "0.0",
     "sort2" : "1.0",
     "sort3" : "6.0",
-    "sort4" : "2.0"
+    "sort4" : "3.0",
+    "sort5" : "1.0"
   }, {
-    "pk" : "2243",
-    "created" : "2021-02-23T21:30:52.090-05:00[America/New_York]",
+    "pk" : "9106",
+    "created" : "2021-02-27T22:31:28.189-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "htmlBefore", "userId", "sort4", "created", "sort3", "sort1", "htmlVar", "htmlAfter", "sort2", "pageDesignKeys" ],
+    "saves" : [ "htmlBefore", "userId", "sort4", "sort3", "sort1", "htmlVar", "htmlAfter", "sort2", "sort5", "created", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "<script>//<![CDATA[\n  $.get( \"",
-    "htmlAfter" : "/api/traffic-stop?rows=0&facet=true&facet.range.start=1999-12-30T00:00:00.000Z&facet.range.end=2000-02-01T00:00:00.000Z&facet.range.gap=%2B1DAY&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles\", function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitles.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitles[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = a;\n        var itemRangeValues = { x: new Date(rangeData.value), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        ;\n\n      chart.xAxis\n        .axisLabel('Date')\n        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); })\n        ;\n\n      chart.yAxis\n        .axisLabel('Stops by race')\n        ;\n\n      d3.select('#svg2')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n//]]></script>",
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgSearchRatePie(year) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-search?rows=0&facet=true&facet.field=personRaceTitle\" + (year ? (\"&fq=stopYear:\" + year) : \"\"), function( searchData ) {\n    var graphData = [];\n    var facetTotal = 0;\n    for (i = 0; i < searchData.facet_fields.personRaceTitle.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitle[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      facetTotal += a;\n    }\n    for (i = 0; i < searchData.facet_fields.personRaceTitle.length; i++) {\n      var fieldData = searchData.facet_fields.personRaceTitle[i];\n      var fieldLabel = Object.keys(fieldData)[0];\n      var a = fieldData[fieldLabel];\n      var c = facetTotal == 0 ? 0 : (a / facetTotal);\n      var itemData = { label: fieldLabel, value: c };\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.pieChart()\n        .x(function(d) { return d.label })\n        .y(function(d) { return d.value })\n        .showLabels(true)\n        .labelThreshold(.05)\n        .labelType('percent')\n        .donut(true)\n        .donutRatio(0.35)\n        ;\n\n      d3.select('#svgSearchRatePie')\n        .datum(graphData)\n        .transition().duration(350)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgSearchRatePie();\n//]]></script>\n",
     "htmlVar" : "siteBaseUrl",
     "sort1" : "0.0",
     "sort2" : "1.0",
     "sort3" : "6.0",
-    "sort4" : "3.0"
+    "sort4" : "3.0",
+    "sort5" : "2.0"
+  }, {
+    "pk" : "9107",
+    "created" : "2021-02-27T22:35:52.854-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "saves" : [ "htmlBefore", "userId", "sort4", "htmlAfter", "sort3", "sort1", "htmlVar", "sort2", "sort5", "created", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "<script>//<![CDATA[\nfunction svgSearchRatePercentTotal(year) {\n  $.get( \"",
+    "htmlAfter" : "/api/traffic-search?rows=0&facet=true&facet.range.start=1990-01-01T00:00:00.000Z&facet.range.end=NOW&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle\", function( searchData ) {\n    var graphData = [];\n    for (i = 0; i < searchData.facet_pivot.personRaceTitle.length; i++) {\n      var pivotData = searchData.facet_pivot.personRaceTitle[i];\n      var itemValues = [];\n      var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues };\n      for (j = 0; j < pivotData.ranges.stopDateTime.counts.length; j++) {\n        var rangeData = pivotData.ranges.stopDateTime.counts[j];\n        var a = rangeData.count;\n        var b = searchData.facet_ranges.stopDateTime.counts[j].count;\n        var c = b == 0 ? 0 : (a / b);\n        var itemRangeValues = { x: parseInt(rangeData.value.substr(0, rangeData.value.indexOf('-'))), y: c, series: i }\n        itemValues.push(itemRangeValues);\n      }\n      graphData.push(itemData);\n    }\n\n    nv.addGraph(function() {\n      var chart = nv.models.lineChart()\n        .margin({left: 100})\n        .useInteractiveGuideline(true)\n        .transitionDuration(350)\n        .showLegend(true)\n        .showYAxis(true)\n        .showXAxis(true)\n        .forceY([0, 1])\n        ;\n\n      chart.xAxis\n        .axisLabel('Year')\n        .tickFormat(d3.format('.0d'))\n        ;\n\n      chart.yAxis\n        .axisLabel('Percentage of searches by race')\n        .tickFormat(d3.format('%'));\n        ;\n\n      d3.select('#svgSearchRatePercentTotal')\n        .datum(graphData)\n        .call(chart);\n\n      return chart;\n    });\n  });\n}\nsvgSearchRatePercentTotal();\n//]]></script>",
+    "htmlVar" : "siteBaseUrl",
+    "sort1" : "0.0",
+    "sort2" : "1.0",
+    "sort3" : "6.0",
+    "sort4" : "3.0",
+    "sort5" : "3.0"
   }, {
     "pk" : "1455",
     "inheritPk" : "60",
@@ -1127,6 +1186,16 @@
     "htmlExclude" : false,
     "pdfExclude" : false,
     "loginLogout" : false,
+    "sort1" : "1.0",
+    "sort2" : "1.0",
+    "sort3" : "1.0"
+  }, {
+    "pk" : "9102",
+    "created" : "2021-02-25T17:41:14.854-05:00[America/New_York]",
+    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
+    "saves" : [ "sort3", "userId", "sort1", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
+    "pageDesignKeys" : [ "1406" ],
+    "htmlBefore" : "    <div>\n      <svg id=\"svgCensusCountPie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
     "sort1" : "1.0",
     "sort2" : "1.0",
     "sort3" : "1.0"
@@ -2256,56 +2325,46 @@
     "sort3" : "1.0",
     "sort4" : "999.0"
   }, {
-    "pk" : "9102",
-    "created" : "2021-02-25T17:41:14.854-05:00[America/New_York]",
-    "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "sort3", "userId", "sort1", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
-    "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgCensusCountPie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
-    "sort1" : "1.0",
-    "sort2" : "2.0",
-    "sort3" : "1.0"
-  }, {
     "pk" : "1409",
     "created" : "2021-02-16T21:22:25.420-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
     "userKey" : "1",
-    "saves" : [ "userId", "sort1", "sort2", "userKey", "sort3", "created", "htmlBefore", "pageDesignKeys" ],
+    "saves" : [ "htmlBefore", "userId", "sort1", "sort2", "userKey", "sort3", "created", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgStopCountPie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <div>\n      <select id=\"selectStopCountPie\" onchange=\"svgStopCountPie(this.value)\"></select>\n    </div>\n",
+    "htmlBefore" : "    <h2>Traffic Stops</h2>\n    <h3>Traffic Stops (percentage by race/ethnic composition)</h3>\n    <p>These graphs reflect the race/ethnic composition of drivers stopped by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>\n    <div>\n      <svg id=\"svgStopCountPie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <div>\n      <select id=\"selectStopCountPie\" onchange=\"svgStopCountPie(this.value)\"></select>\n    </div>\n    <p class=\"font-style-italic \">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>\n    <p class=\"font-style-italic \">* Non-hispanic</p>",
     "sort1" : "1.0",
     "sort2" : "2.0",
-    "sort3" : "2.0"
+    "sort3" : "1.0"
   }, {
     "pk" : "2182",
     "created" : "2021-02-23T21:30:16.584-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "userId", "sort3", "sort1", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
+    "saves" : [ "userId", "sort1", "sort2", "htmlBefore", "sort3", "created", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgStopCountPercent\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h3>Longitudinal view of annual traffic stops</h3>\n    <div>\n      <svg id=\"svgStopCountPercent\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p class=\"font-style-italic \">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the \"Data\" tab to review the actual raw counts from the NC Department of Justice. </p>\n    <p class=\"font-style-italic \">* Non-hispanic</p>\n",
     "sort1" : "1.0",
     "sort2" : "2.0",
-    "sort3" : "3.0"
+    "sort3" : "2.0"
   }, {
     "pk" : "9093",
     "created" : "2021-02-25T17:13:39.168-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "userId", "sort1", "sort3", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
+    "saves" : [ "userId", "sort3", "sort1", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgStopCountTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h3>Departmental Stop Count</h3>\n    <p>This graph displays the number of traffic stops broken down by stop purpose and ethnicity. Adjusting the drop down menu will display the individual stop counts relative to ethnic groups on a year-by-year basis. </p>\n    <div>\n      <svg id=\"svgStopCountTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p class=\"font-style-italic \">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>\n",
     "sort1" : "1.0",
     "sort2" : "2.0",
-    "sort3" : "4.0"
+    "sort3" : "3.0"
   }, {
     "pk" : "9094",
     "created" : "2021-02-25T17:15:20.366-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "userId", "sort1", "sort3", "sort2", "created", "htmlBefore", "pageDesignKeys" ],
+    "saves" : [ "htmlBefore", "userId", "sort1", "sort3", "sort2", "created", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgSearchCountTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h3>Departmental Search Count</h3>\n    <p>This graph displays the number of searches broken down by search type and ethnicity. Adjusting the drop down menu will display the individual search counts relative to ethnic groups on a year-by-year basis. </p>\n    <div>\n      <svg id=\"svgSearchCountTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p class=\"font-style-italic \">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>\n",
     "sort1" : "1.0",
     "sort2" : "2.0",
-    "sort3" : "5.0"
+    "sort3" : "4.0"
   }, {
     "pk" : "1527",
     "inheritPk" : "134",
@@ -2412,9 +2471,9 @@
     "pk" : "9095",
     "created" : "2021-02-25T17:21:07.150-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "sort4", "userId", "htmlBefore", "sort1", "sort3", "sort2", "created", "pageDesignKeys" ],
+    "saves" : [ "sort4", "userId", "sort1", "sort3", "sort2", "htmlBefore", "created", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgSearchRatePercentOfStops\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h2>Departmental Search Rate</h2>\n    <h3>Average Departmental Search Rate For Vehicle Stops</h3>\n    <p>This graph is a longitudinal representation of the average departmental search rate for vehicle stops since the department began reporting its data to the state. The black line represents the overall search rate for all motorists. </p>\n    <div>\n      <svg id=\"svgSearchRatePercentOfStops\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p>Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the \"Data\" tab to review the actual stop/search counts from the NC Department of Justice. </p>\n    <p>* Non-hispanic</p>\n",
     "sort1" : "1.0",
     "sort2" : "3.0",
     "sort3" : "1.0"
@@ -2488,9 +2547,9 @@
     "pk" : "9096",
     "created" : "2021-02-25T17:24:21.497-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "created", "userId", "sort1", "sort3", "sort2", "htmlBefore", "pageDesignKeys" ],
+    "saves" : [ "created", "userId", "sort1", "htmlBefore", "sort2", "sort3", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgSearchRatePie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h3>Search Data by Race/Ethnic Composition</h3>\n    <p>These graphs reflect the race/ethnic composition of drivers searched by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>\n    <div>\n      <svg id=\"svgSearchRatePie\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p class=\"font-style-italic \">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>\n    <p class=\"font-style-italic \">* Non-hispanic</p>\n",
     "sort1" : "1.0",
     "sort2" : "3.0",
     "sort3" : "2.0"
@@ -2564,9 +2623,9 @@
     "pk" : "9097",
     "created" : "2021-02-25T17:25:58.680-05:00[America/New_York]",
     "userId" : "2e2a2ee6-6c02-465f-b04d-ae212644c8bd",
-    "saves" : [ "userId", "sort3", "sort1", "created", "htmlBefore", "sort2", "pageDesignKeys" ],
+    "saves" : [ "userId", "sort3", "sort1", "created", "sort2", "htmlBefore", "pageDesignKeys" ],
     "pageDesignKeys" : [ "1406" ],
-    "htmlBefore" : "    <div>\n      <svg id=\"svgSearchRatePercentTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n",
+    "htmlBefore" : "    <h3>Longitudinal view of annual percent of search by race/ethnic composition</h3>\n    <div>\n      <svg id=\"svgSearchRatePercentTotal\" style=\"width: 600px; height: 400px; \"/>\n    </div>\n    <p class=\"font-style-italic \">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the \"Data\" tab to review the actual raw counts from the NC Department of Justice. </p>\n    <p class=\"font-style-italic \">* Non-hispanic</p>\n",
     "sort1" : "1.0",
     "sort2" : "3.0",
     "sort3" : "3.0"

@@ -906,6 +906,10 @@ function patchTrafficStopFilters($formFilters) {
 		if(filterPersonRaceTitles != null && filterPersonRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'personRaceTitles:' + filterPersonRaceTitles });
 
+		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
+		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
+			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
+
 		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
 		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
 			filters.push({ name: 'fq', value: 'trafficStopCompleteName:' + filterTrafficStopCompleteName });
@@ -1177,6 +1181,10 @@ function searchTrafficStopFilters($formFilters) {
 		var filterPersonRaceTitles = $formFilters.find('.valuePersonRaceTitles').val();
 		if(filterPersonRaceTitles != null && filterPersonRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'personRaceTitles:' + filterPersonRaceTitles });
+
+		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
+		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
+			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
 
 		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
 		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
@@ -1483,6 +1491,10 @@ function adminsearchTrafficStopFilters($formFilters) {
 		var filterPersonRaceTitles = $formFilters.find('.valuePersonRaceTitles').val();
 		if(filterPersonRaceTitles != null && filterPersonRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'personRaceTitles:' + filterPersonRaceTitles });
+
+		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
+		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
+			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
 
 		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
 		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
@@ -2133,6 +2145,18 @@ async function websocketTrafficStopInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputTrafficStop' + pk + 'PersonRaceTitles'));
+			}
+			var val = o['trafficSearchRaceTitles'];
+			if(vars.includes('trafficSearchRaceTitles')) {
+				$('.inputTrafficStop' + pk + 'TrafficSearchRaceTitles').each(function() {
+					if(val !== $(this).val())
+						$(this).val(val);
+				});
+				$('.varTrafficStop' + pk + 'TrafficSearchRaceTitles').each(function() {
+					if(val !== $(this).text())
+						$(this).text(val);
+				});
+				addGlow($('.inputTrafficStop' + pk + 'TrafficSearchRaceTitles'));
 			}
 			var val = o['trafficStopCompleteName'];
 			if(vars.includes('trafficStopCompleteName')) {
