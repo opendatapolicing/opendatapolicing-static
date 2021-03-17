@@ -91,10 +91,6 @@ async function putcopySiteAgency($formValues, pk, success, error) {
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
 
-	var valueUserId = $formValues.find('.valueUserId').val();
-	if(valueUserId != null && valueUserId !== '')
-		vals['userId'] = valueUserId;
-
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	if(valueUserKey != null && valueUserKey !== '')
 		vals['userKey'] = valueUserKey;
@@ -179,10 +175,6 @@ async function postSiteAgency($formValues, success, error) {
 	var valueInheritPk = $formValues.find('.valueInheritPk').val();
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
-
-	var valueUserId = $formValues.find('.valueUserId').val();
-	if(valueUserId != null && valueUserId !== '')
-		vals['userId'] = valueUserId;
 
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	if(valueUserKey != null && valueUserKey !== '')
@@ -354,18 +346,6 @@ async function patchSiteAgency($formFilters, $formValues, pk, success, error) {
 	if(removeInheritPk != null && removeInheritPk !== '')
 		vals['removeInheritPk'] = removeInheritPk;
 
-	var valueUserId = $formValues.find('.valueUserId').val();
-	var removeUserId = $formValues.find('.removeUserId').val() === 'true';
-	var setUserId = removeUserId ? null : $formValues.find('.setUserId').val();
-	var addUserId = $formValues.find('.addUserId').val();
-	if(removeUserId || setUserId != null && setUserId !== '')
-		vals['setUserId'] = setUserId;
-	if(addUserId != null && addUserId !== '')
-		vals['addUserId'] = addUserId;
-	var removeUserId = $formValues.find('.removeUserId').val();
-	if(removeUserId != null && removeUserId !== '')
-		vals['removeUserId'] = removeUserId;
-
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	var removeUserKey = $formValues.find('.removeUserKey').val() === 'true';
 	var setUserKey = removeUserKey ? null : $formValues.find('.setUserKey').val();
@@ -472,10 +452,6 @@ function patchSiteAgencyFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -658,10 +634,6 @@ function searchSiteAgencyFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -881,10 +853,6 @@ function adminsearchSiteAgencyFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -1290,18 +1258,6 @@ async function websocketSiteAgencyInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputSiteAgency' + pk + 'SessionId'));
-			}
-			var val = o['userId'];
-			if(vars.includes('userId')) {
-				$('.inputSiteAgency' + pk + 'UserId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSiteAgency' + pk + 'UserId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSiteAgency' + pk + 'UserId'));
 			}
 			var val = o['userKey'];
 			if(vars.includes('userKey')) {

@@ -79,10 +79,6 @@ async function putcopySearchBasis($formValues, pk, success, error) {
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
 
-	var valueUserId = $formValues.find('.valueUserId').val();
-	if(valueUserId != null && valueUserId !== '')
-		vals['userId'] = valueUserId;
-
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	if(valueUserKey != null && valueUserKey !== '')
 		vals['userKey'] = valueUserKey;
@@ -90,90 +86,6 @@ async function putcopySearchBasis($formValues, pk, success, error) {
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	if(valueStopAgencyTitle != null && valueStopAgencyTitle !== '')
-		vals['stopAgencyTitle'] = valueStopAgencyTitle;
-
-	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
-	if(valueStopDateTime != null && valueStopDateTime !== '')
-		vals['stopDateTime'] = valueStopDateTime;
-
-	var valueStopPurposeNum = $formValues.find('.valueStopPurposeNum').val();
-	if(valueStopPurposeNum != null && valueStopPurposeNum !== '')
-		vals['stopPurposeNum'] = valueStopPurposeNum;
-
-	var valueStopPurposeTitle = $formValues.find('.valueStopPurposeTitle').val();
-	if(valueStopPurposeTitle != null && valueStopPurposeTitle !== '')
-		vals['stopPurposeTitle'] = valueStopPurposeTitle;
-
-	var valueStopActionNum = $formValues.find('.valueStopActionNum').val();
-	if(valueStopActionNum != null && valueStopActionNum !== '')
-		vals['stopActionNum'] = valueStopActionNum;
-
-	var valueStopActionTitle = $formValues.find('.valueStopActionTitle').val();
-	if(valueStopActionTitle != null && valueStopActionTitle !== '')
-		vals['stopActionTitle'] = valueStopActionTitle;
-
-	var valueStopDriverArrest = $formValues.find('.valueStopDriverArrest').val();
-	if(valueStopDriverArrest != null && valueStopDriverArrest !== '')
-		vals['stopDriverArrest'] = valueStopDriverArrest == 'true';
-
-	var valueStopPassengerArrest = $formValues.find('.valueStopPassengerArrest').val();
-	if(valueStopPassengerArrest != null && valueStopPassengerArrest !== '')
-		vals['stopPassengerArrest'] = valueStopPassengerArrest == 'true';
-
-	var valueStopEncounterForce = $formValues.find('.valueStopEncounterForce').val();
-	if(valueStopEncounterForce != null && valueStopEncounterForce !== '')
-		vals['stopEncounterForce'] = valueStopEncounterForce == 'true';
-
-	var valueStopEngageForce = $formValues.find('.valueStopEngageForce').val();
-	if(valueStopEngageForce != null && valueStopEngageForce !== '')
-		vals['stopEngageForce'] = valueStopEngageForce == 'true';
-
-	var valueStopOfficerInjury = $formValues.find('.valueStopOfficerInjury').val();
-	if(valueStopOfficerInjury != null && valueStopOfficerInjury !== '')
-		vals['stopOfficerInjury'] = valueStopOfficerInjury == 'true';
-
-	var valueStopDriverInjury = $formValues.find('.valueStopDriverInjury').val();
-	if(valueStopDriverInjury != null && valueStopDriverInjury !== '')
-		vals['stopDriverInjury'] = valueStopDriverInjury == 'true';
-
-	var valueStopPassengerInjury = $formValues.find('.valueStopPassengerInjury').val();
-	if(valueStopPassengerInjury != null && valueStopPassengerInjury !== '')
-		vals['stopPassengerInjury'] = valueStopPassengerInjury == 'true';
-
-	var valueStopOfficerId = $formValues.find('.valueStopOfficerId').val();
-	if(valueStopOfficerId != null && valueStopOfficerId !== '')
-		vals['stopOfficerId'] = valueStopOfficerId;
-
-	var valueStopLocationId = $formValues.find('.valueStopLocationId').val();
-	if(valueStopLocationId != null && valueStopLocationId !== '')
-		vals['stopLocationId'] = valueStopLocationId;
-
-	var valueStopCityId = $formValues.find('.valueStopCityId').val();
-	if(valueStopCityId != null && valueStopCityId !== '')
-		vals['stopCityId'] = valueStopCityId;
-
-	var valuePersonTypeId = $formValues.find('.valuePersonTypeId').val();
-	if(valuePersonTypeId != null && valuePersonTypeId !== '')
-		vals['personTypeId'] = valuePersonTypeId;
-
-	var valuePersonGenderId = $formValues.find('.valuePersonGenderId').val();
-	if(valuePersonGenderId != null && valuePersonGenderId !== '')
-		vals['personGenderId'] = valuePersonGenderId;
-
-	var valuePersonEthnicityId = $formValues.find('.valuePersonEthnicityId').val();
-	if(valuePersonEthnicityId != null && valuePersonEthnicityId !== '')
-		vals['personEthnicityId'] = valuePersonEthnicityId;
-
-	var valuePersonRaceId = $formValues.find('.valuePersonRaceId').val();
-	if(valuePersonRaceId != null && valuePersonRaceId !== '')
-		vals['personRaceId'] = valuePersonRaceId;
-
-	var valueSearchTypeNum = $formValues.find('.valueSearchTypeNum').val();
-	if(valueSearchTypeNum != null && valueSearchTypeNum !== '')
-		vals['searchTypeNum'] = valueSearchTypeNum;
 
 	var valueSearchBasisId = $formValues.find('.valueSearchBasisId').val();
 	if(valueSearchBasisId != null && valueSearchBasisId !== '')
@@ -244,10 +156,6 @@ async function postSearchBasis($formValues, success, error) {
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
 
-	var valueUserId = $formValues.find('.valueUserId').val();
-	if(valueUserId != null && valueUserId !== '')
-		vals['userId'] = valueUserId;
-
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	if(valueUserKey != null && valueUserKey !== '')
 		vals['userKey'] = valueUserKey;
@@ -255,90 +163,6 @@ async function postSearchBasis($formValues, success, error) {
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	if(valueStopAgencyTitle != null && valueStopAgencyTitle !== '')
-		vals['stopAgencyTitle'] = valueStopAgencyTitle;
-
-	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
-	if(valueStopDateTime != null && valueStopDateTime !== '')
-		vals['stopDateTime'] = valueStopDateTime;
-
-	var valueStopPurposeNum = $formValues.find('.valueStopPurposeNum').val();
-	if(valueStopPurposeNum != null && valueStopPurposeNum !== '')
-		vals['stopPurposeNum'] = valueStopPurposeNum;
-
-	var valueStopPurposeTitle = $formValues.find('.valueStopPurposeTitle').val();
-	if(valueStopPurposeTitle != null && valueStopPurposeTitle !== '')
-		vals['stopPurposeTitle'] = valueStopPurposeTitle;
-
-	var valueStopActionNum = $formValues.find('.valueStopActionNum').val();
-	if(valueStopActionNum != null && valueStopActionNum !== '')
-		vals['stopActionNum'] = valueStopActionNum;
-
-	var valueStopActionTitle = $formValues.find('.valueStopActionTitle').val();
-	if(valueStopActionTitle != null && valueStopActionTitle !== '')
-		vals['stopActionTitle'] = valueStopActionTitle;
-
-	var valueStopDriverArrest = $formValues.find('.valueStopDriverArrest').val();
-	if(valueStopDriverArrest != null && valueStopDriverArrest !== '')
-		vals['stopDriverArrest'] = valueStopDriverArrest == 'true';
-
-	var valueStopPassengerArrest = $formValues.find('.valueStopPassengerArrest').val();
-	if(valueStopPassengerArrest != null && valueStopPassengerArrest !== '')
-		vals['stopPassengerArrest'] = valueStopPassengerArrest == 'true';
-
-	var valueStopEncounterForce = $formValues.find('.valueStopEncounterForce').val();
-	if(valueStopEncounterForce != null && valueStopEncounterForce !== '')
-		vals['stopEncounterForce'] = valueStopEncounterForce == 'true';
-
-	var valueStopEngageForce = $formValues.find('.valueStopEngageForce').val();
-	if(valueStopEngageForce != null && valueStopEngageForce !== '')
-		vals['stopEngageForce'] = valueStopEngageForce == 'true';
-
-	var valueStopOfficerInjury = $formValues.find('.valueStopOfficerInjury').val();
-	if(valueStopOfficerInjury != null && valueStopOfficerInjury !== '')
-		vals['stopOfficerInjury'] = valueStopOfficerInjury == 'true';
-
-	var valueStopDriverInjury = $formValues.find('.valueStopDriverInjury').val();
-	if(valueStopDriverInjury != null && valueStopDriverInjury !== '')
-		vals['stopDriverInjury'] = valueStopDriverInjury == 'true';
-
-	var valueStopPassengerInjury = $formValues.find('.valueStopPassengerInjury').val();
-	if(valueStopPassengerInjury != null && valueStopPassengerInjury !== '')
-		vals['stopPassengerInjury'] = valueStopPassengerInjury == 'true';
-
-	var valueStopOfficerId = $formValues.find('.valueStopOfficerId').val();
-	if(valueStopOfficerId != null && valueStopOfficerId !== '')
-		vals['stopOfficerId'] = valueStopOfficerId;
-
-	var valueStopLocationId = $formValues.find('.valueStopLocationId').val();
-	if(valueStopLocationId != null && valueStopLocationId !== '')
-		vals['stopLocationId'] = valueStopLocationId;
-
-	var valueStopCityId = $formValues.find('.valueStopCityId').val();
-	if(valueStopCityId != null && valueStopCityId !== '')
-		vals['stopCityId'] = valueStopCityId;
-
-	var valuePersonTypeId = $formValues.find('.valuePersonTypeId').val();
-	if(valuePersonTypeId != null && valuePersonTypeId !== '')
-		vals['personTypeId'] = valuePersonTypeId;
-
-	var valuePersonGenderId = $formValues.find('.valuePersonGenderId').val();
-	if(valuePersonGenderId != null && valuePersonGenderId !== '')
-		vals['personGenderId'] = valuePersonGenderId;
-
-	var valuePersonEthnicityId = $formValues.find('.valuePersonEthnicityId').val();
-	if(valuePersonEthnicityId != null && valuePersonEthnicityId !== '')
-		vals['personEthnicityId'] = valuePersonEthnicityId;
-
-	var valuePersonRaceId = $formValues.find('.valuePersonRaceId').val();
-	if(valuePersonRaceId != null && valuePersonRaceId !== '')
-		vals['personRaceId'] = valuePersonRaceId;
-
-	var valueSearchTypeNum = $formValues.find('.valueSearchTypeNum').val();
-	if(valueSearchTypeNum != null && valueSearchTypeNum !== '')
-		vals['searchTypeNum'] = valueSearchTypeNum;
 
 	var valueSearchBasisId = $formValues.find('.valueSearchBasisId').val();
 	if(valueSearchBasisId != null && valueSearchBasisId !== '')
@@ -470,18 +294,6 @@ async function patchSearchBasis($formFilters, $formValues, pk, success, error) {
 	if(removeInheritPk != null && removeInheritPk !== '')
 		vals['removeInheritPk'] = removeInheritPk;
 
-	var valueUserId = $formValues.find('.valueUserId').val();
-	var removeUserId = $formValues.find('.removeUserId').val() === 'true';
-	var setUserId = removeUserId ? null : $formValues.find('.setUserId').val();
-	var addUserId = $formValues.find('.addUserId').val();
-	if(removeUserId || setUserId != null && setUserId !== '')
-		vals['setUserId'] = setUserId;
-	if(addUserId != null && addUserId !== '')
-		vals['addUserId'] = addUserId;
-	var removeUserId = $formValues.find('.removeUserId').val();
-	if(removeUserId != null && removeUserId !== '')
-		vals['removeUserId'] = removeUserId;
-
 	var valueUserKey = $formValues.find('.valueUserKey').val();
 	var removeUserKey = $formValues.find('.removeUserKey').val() === 'true';
 	var setUserKey = removeUserKey ? null : $formValues.find('.setUserKey').val();
@@ -505,286 +317,6 @@ async function patchSearchBasis($formFilters, $formValues, pk, success, error) {
 	var removeObjectTitle = $formValues.find('.removeObjectTitle').val();
 	if(removeObjectTitle != null && removeObjectTitle !== '')
 		vals['removeObjectTitle'] = removeObjectTitle;
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	var removeStopAgencyTitle = $formValues.find('.removeStopAgencyTitle').val() === 'true';
-	var setStopAgencyTitle = removeStopAgencyTitle ? null : $formValues.find('.setStopAgencyTitle').val();
-	var addStopAgencyTitle = $formValues.find('.addStopAgencyTitle').val();
-	if(removeStopAgencyTitle || setStopAgencyTitle != null && setStopAgencyTitle !== '')
-		vals['setStopAgencyTitle'] = setStopAgencyTitle;
-	if(addStopAgencyTitle != null && addStopAgencyTitle !== '')
-		vals['addStopAgencyTitle'] = addStopAgencyTitle;
-	var removeStopAgencyTitle = $formValues.find('.removeStopAgencyTitle').val();
-	if(removeStopAgencyTitle != null && removeStopAgencyTitle !== '')
-		vals['removeStopAgencyTitle'] = removeStopAgencyTitle;
-
-	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
-	var removeStopDateTime = $formValues.find('.removeStopDateTime').val() === 'true';
-	var setStopDateTime = removeStopDateTime ? null : $formValues.find('.setStopDateTime').val();
-	var addStopDateTime = $formValues.find('.addStopDateTime').val();
-	if(removeStopDateTime || setStopDateTime != null && setStopDateTime !== '')
-		vals['setStopDateTime'] = setStopDateTime;
-	if(addStopDateTime != null && addStopDateTime !== '')
-		vals['addStopDateTime'] = addStopDateTime;
-	var removeStopDateTime = $formValues.find('.removeStopDateTime').val();
-	if(removeStopDateTime != null && removeStopDateTime !== '')
-		vals['removeStopDateTime'] = removeStopDateTime;
-
-	var valueStopPurposeNum = $formValues.find('.valueStopPurposeNum').val();
-	var removeStopPurposeNum = $formValues.find('.removeStopPurposeNum').val() === 'true';
-	var setStopPurposeNum = removeStopPurposeNum ? null : $formValues.find('.setStopPurposeNum').val();
-	var addStopPurposeNum = $formValues.find('.addStopPurposeNum').val();
-	if(removeStopPurposeNum || setStopPurposeNum != null && setStopPurposeNum !== '')
-		vals['setStopPurposeNum'] = setStopPurposeNum;
-	if(addStopPurposeNum != null && addStopPurposeNum !== '')
-		vals['addStopPurposeNum'] = addStopPurposeNum;
-	var removeStopPurposeNum = $formValues.find('.removeStopPurposeNum').val();
-	if(removeStopPurposeNum != null && removeStopPurposeNum !== '')
-		vals['removeStopPurposeNum'] = removeStopPurposeNum;
-
-	var valueStopPurposeTitle = $formValues.find('.valueStopPurposeTitle').val();
-	var removeStopPurposeTitle = $formValues.find('.removeStopPurposeTitle').val() === 'true';
-	var setStopPurposeTitle = removeStopPurposeTitle ? null : $formValues.find('.setStopPurposeTitle').val();
-	var addStopPurposeTitle = $formValues.find('.addStopPurposeTitle').val();
-	if(removeStopPurposeTitle || setStopPurposeTitle != null && setStopPurposeTitle !== '')
-		vals['setStopPurposeTitle'] = setStopPurposeTitle;
-	if(addStopPurposeTitle != null && addStopPurposeTitle !== '')
-		vals['addStopPurposeTitle'] = addStopPurposeTitle;
-	var removeStopPurposeTitle = $formValues.find('.removeStopPurposeTitle').val();
-	if(removeStopPurposeTitle != null && removeStopPurposeTitle !== '')
-		vals['removeStopPurposeTitle'] = removeStopPurposeTitle;
-
-	var valueStopActionNum = $formValues.find('.valueStopActionNum').val();
-	var removeStopActionNum = $formValues.find('.removeStopActionNum').val() === 'true';
-	var setStopActionNum = removeStopActionNum ? null : $formValues.find('.setStopActionNum').val();
-	var addStopActionNum = $formValues.find('.addStopActionNum').val();
-	if(removeStopActionNum || setStopActionNum != null && setStopActionNum !== '')
-		vals['setStopActionNum'] = setStopActionNum;
-	if(addStopActionNum != null && addStopActionNum !== '')
-		vals['addStopActionNum'] = addStopActionNum;
-	var removeStopActionNum = $formValues.find('.removeStopActionNum').val();
-	if(removeStopActionNum != null && removeStopActionNum !== '')
-		vals['removeStopActionNum'] = removeStopActionNum;
-
-	var valueStopActionTitle = $formValues.find('.valueStopActionTitle').val();
-	var removeStopActionTitle = $formValues.find('.removeStopActionTitle').val() === 'true';
-	var setStopActionTitle = removeStopActionTitle ? null : $formValues.find('.setStopActionTitle').val();
-	var addStopActionTitle = $formValues.find('.addStopActionTitle').val();
-	if(removeStopActionTitle || setStopActionTitle != null && setStopActionTitle !== '')
-		vals['setStopActionTitle'] = setStopActionTitle;
-	if(addStopActionTitle != null && addStopActionTitle !== '')
-		vals['addStopActionTitle'] = addStopActionTitle;
-	var removeStopActionTitle = $formValues.find('.removeStopActionTitle').val();
-	if(removeStopActionTitle != null && removeStopActionTitle !== '')
-		vals['removeStopActionTitle'] = removeStopActionTitle;
-
-	var valueStopDriverArrest = $formValues.find('.valueStopDriverArrest').val();
-	var removeStopDriverArrest = $formValues.find('.removeStopDriverArrest').val() === 'true';
-	var valueStopDriverArrestSelectVal = $formValues.find('select.setStopDriverArrest').val();
-	var valueStopDriverArrest = null;
-	if(valueStopDriverArrestSelectVal != null && valueStopDriverArrestSelectVal !== '')
-		valueStopDriverArrest = valueStopDriverArrestSelectVal == 'true';
-	var setStopDriverArrest = removeStopDriverArrest ? null : valueStopDriverArrest;
-	var addStopDriverArrest = $formValues.find('.addStopDriverArrest').prop('checked');
-	if(removeStopDriverArrest || setStopDriverArrest != null && setStopDriverArrest !== '')
-		vals['setStopDriverArrest'] = setStopDriverArrest;
-	if(addStopDriverArrest != null && addStopDriverArrest !== '')
-		vals['addStopDriverArrest'] = addStopDriverArrest;
-	var removeStopDriverArrest = $formValues.find('.removeStopDriverArrest').prop('checked');
-	if(removeStopDriverArrest != null && removeStopDriverArrest !== '')
-		vals['removeStopDriverArrest'] = removeStopDriverArrest;
-
-	var valueStopPassengerArrest = $formValues.find('.valueStopPassengerArrest').val();
-	var removeStopPassengerArrest = $formValues.find('.removeStopPassengerArrest').val() === 'true';
-	var valueStopPassengerArrestSelectVal = $formValues.find('select.setStopPassengerArrest').val();
-	var valueStopPassengerArrest = null;
-	if(valueStopPassengerArrestSelectVal != null && valueStopPassengerArrestSelectVal !== '')
-		valueStopPassengerArrest = valueStopPassengerArrestSelectVal == 'true';
-	var setStopPassengerArrest = removeStopPassengerArrest ? null : valueStopPassengerArrest;
-	var addStopPassengerArrest = $formValues.find('.addStopPassengerArrest').prop('checked');
-	if(removeStopPassengerArrest || setStopPassengerArrest != null && setStopPassengerArrest !== '')
-		vals['setStopPassengerArrest'] = setStopPassengerArrest;
-	if(addStopPassengerArrest != null && addStopPassengerArrest !== '')
-		vals['addStopPassengerArrest'] = addStopPassengerArrest;
-	var removeStopPassengerArrest = $formValues.find('.removeStopPassengerArrest').prop('checked');
-	if(removeStopPassengerArrest != null && removeStopPassengerArrest !== '')
-		vals['removeStopPassengerArrest'] = removeStopPassengerArrest;
-
-	var valueStopEncounterForce = $formValues.find('.valueStopEncounterForce').val();
-	var removeStopEncounterForce = $formValues.find('.removeStopEncounterForce').val() === 'true';
-	var valueStopEncounterForceSelectVal = $formValues.find('select.setStopEncounterForce').val();
-	var valueStopEncounterForce = null;
-	if(valueStopEncounterForceSelectVal != null && valueStopEncounterForceSelectVal !== '')
-		valueStopEncounterForce = valueStopEncounterForceSelectVal == 'true';
-	var setStopEncounterForce = removeStopEncounterForce ? null : valueStopEncounterForce;
-	var addStopEncounterForce = $formValues.find('.addStopEncounterForce').prop('checked');
-	if(removeStopEncounterForce || setStopEncounterForce != null && setStopEncounterForce !== '')
-		vals['setStopEncounterForce'] = setStopEncounterForce;
-	if(addStopEncounterForce != null && addStopEncounterForce !== '')
-		vals['addStopEncounterForce'] = addStopEncounterForce;
-	var removeStopEncounterForce = $formValues.find('.removeStopEncounterForce').prop('checked');
-	if(removeStopEncounterForce != null && removeStopEncounterForce !== '')
-		vals['removeStopEncounterForce'] = removeStopEncounterForce;
-
-	var valueStopEngageForce = $formValues.find('.valueStopEngageForce').val();
-	var removeStopEngageForce = $formValues.find('.removeStopEngageForce').val() === 'true';
-	var valueStopEngageForceSelectVal = $formValues.find('select.setStopEngageForce').val();
-	var valueStopEngageForce = null;
-	if(valueStopEngageForceSelectVal != null && valueStopEngageForceSelectVal !== '')
-		valueStopEngageForce = valueStopEngageForceSelectVal == 'true';
-	var setStopEngageForce = removeStopEngageForce ? null : valueStopEngageForce;
-	var addStopEngageForce = $formValues.find('.addStopEngageForce').prop('checked');
-	if(removeStopEngageForce || setStopEngageForce != null && setStopEngageForce !== '')
-		vals['setStopEngageForce'] = setStopEngageForce;
-	if(addStopEngageForce != null && addStopEngageForce !== '')
-		vals['addStopEngageForce'] = addStopEngageForce;
-	var removeStopEngageForce = $formValues.find('.removeStopEngageForce').prop('checked');
-	if(removeStopEngageForce != null && removeStopEngageForce !== '')
-		vals['removeStopEngageForce'] = removeStopEngageForce;
-
-	var valueStopOfficerInjury = $formValues.find('.valueStopOfficerInjury').val();
-	var removeStopOfficerInjury = $formValues.find('.removeStopOfficerInjury').val() === 'true';
-	var valueStopOfficerInjurySelectVal = $formValues.find('select.setStopOfficerInjury').val();
-	var valueStopOfficerInjury = null;
-	if(valueStopOfficerInjurySelectVal != null && valueStopOfficerInjurySelectVal !== '')
-		valueStopOfficerInjury = valueStopOfficerInjurySelectVal == 'true';
-	var setStopOfficerInjury = removeStopOfficerInjury ? null : valueStopOfficerInjury;
-	var addStopOfficerInjury = $formValues.find('.addStopOfficerInjury').prop('checked');
-	if(removeStopOfficerInjury || setStopOfficerInjury != null && setStopOfficerInjury !== '')
-		vals['setStopOfficerInjury'] = setStopOfficerInjury;
-	if(addStopOfficerInjury != null && addStopOfficerInjury !== '')
-		vals['addStopOfficerInjury'] = addStopOfficerInjury;
-	var removeStopOfficerInjury = $formValues.find('.removeStopOfficerInjury').prop('checked');
-	if(removeStopOfficerInjury != null && removeStopOfficerInjury !== '')
-		vals['removeStopOfficerInjury'] = removeStopOfficerInjury;
-
-	var valueStopDriverInjury = $formValues.find('.valueStopDriverInjury').val();
-	var removeStopDriverInjury = $formValues.find('.removeStopDriverInjury').val() === 'true';
-	var valueStopDriverInjurySelectVal = $formValues.find('select.setStopDriverInjury').val();
-	var valueStopDriverInjury = null;
-	if(valueStopDriverInjurySelectVal != null && valueStopDriverInjurySelectVal !== '')
-		valueStopDriverInjury = valueStopDriverInjurySelectVal == 'true';
-	var setStopDriverInjury = removeStopDriverInjury ? null : valueStopDriverInjury;
-	var addStopDriverInjury = $formValues.find('.addStopDriverInjury').prop('checked');
-	if(removeStopDriverInjury || setStopDriverInjury != null && setStopDriverInjury !== '')
-		vals['setStopDriverInjury'] = setStopDriverInjury;
-	if(addStopDriverInjury != null && addStopDriverInjury !== '')
-		vals['addStopDriverInjury'] = addStopDriverInjury;
-	var removeStopDriverInjury = $formValues.find('.removeStopDriverInjury').prop('checked');
-	if(removeStopDriverInjury != null && removeStopDriverInjury !== '')
-		vals['removeStopDriverInjury'] = removeStopDriverInjury;
-
-	var valueStopPassengerInjury = $formValues.find('.valueStopPassengerInjury').val();
-	var removeStopPassengerInjury = $formValues.find('.removeStopPassengerInjury').val() === 'true';
-	var valueStopPassengerInjurySelectVal = $formValues.find('select.setStopPassengerInjury').val();
-	var valueStopPassengerInjury = null;
-	if(valueStopPassengerInjurySelectVal != null && valueStopPassengerInjurySelectVal !== '')
-		valueStopPassengerInjury = valueStopPassengerInjurySelectVal == 'true';
-	var setStopPassengerInjury = removeStopPassengerInjury ? null : valueStopPassengerInjury;
-	var addStopPassengerInjury = $formValues.find('.addStopPassengerInjury').prop('checked');
-	if(removeStopPassengerInjury || setStopPassengerInjury != null && setStopPassengerInjury !== '')
-		vals['setStopPassengerInjury'] = setStopPassengerInjury;
-	if(addStopPassengerInjury != null && addStopPassengerInjury !== '')
-		vals['addStopPassengerInjury'] = addStopPassengerInjury;
-	var removeStopPassengerInjury = $formValues.find('.removeStopPassengerInjury').prop('checked');
-	if(removeStopPassengerInjury != null && removeStopPassengerInjury !== '')
-		vals['removeStopPassengerInjury'] = removeStopPassengerInjury;
-
-	var valueStopOfficerId = $formValues.find('.valueStopOfficerId').val();
-	var removeStopOfficerId = $formValues.find('.removeStopOfficerId').val() === 'true';
-	var setStopOfficerId = removeStopOfficerId ? null : $formValues.find('.setStopOfficerId').val();
-	var addStopOfficerId = $formValues.find('.addStopOfficerId').val();
-	if(removeStopOfficerId || setStopOfficerId != null && setStopOfficerId !== '')
-		vals['setStopOfficerId'] = setStopOfficerId;
-	if(addStopOfficerId != null && addStopOfficerId !== '')
-		vals['addStopOfficerId'] = addStopOfficerId;
-	var removeStopOfficerId = $formValues.find('.removeStopOfficerId').val();
-	if(removeStopOfficerId != null && removeStopOfficerId !== '')
-		vals['removeStopOfficerId'] = removeStopOfficerId;
-
-	var valueStopLocationId = $formValues.find('.valueStopLocationId').val();
-	var removeStopLocationId = $formValues.find('.removeStopLocationId').val() === 'true';
-	var setStopLocationId = removeStopLocationId ? null : $formValues.find('.setStopLocationId').val();
-	var addStopLocationId = $formValues.find('.addStopLocationId').val();
-	if(removeStopLocationId || setStopLocationId != null && setStopLocationId !== '')
-		vals['setStopLocationId'] = setStopLocationId;
-	if(addStopLocationId != null && addStopLocationId !== '')
-		vals['addStopLocationId'] = addStopLocationId;
-	var removeStopLocationId = $formValues.find('.removeStopLocationId').val();
-	if(removeStopLocationId != null && removeStopLocationId !== '')
-		vals['removeStopLocationId'] = removeStopLocationId;
-
-	var valueStopCityId = $formValues.find('.valueStopCityId').val();
-	var removeStopCityId = $formValues.find('.removeStopCityId').val() === 'true';
-	var setStopCityId = removeStopCityId ? null : $formValues.find('.setStopCityId').val();
-	var addStopCityId = $formValues.find('.addStopCityId').val();
-	if(removeStopCityId || setStopCityId != null && setStopCityId !== '')
-		vals['setStopCityId'] = setStopCityId;
-	if(addStopCityId != null && addStopCityId !== '')
-		vals['addStopCityId'] = addStopCityId;
-	var removeStopCityId = $formValues.find('.removeStopCityId').val();
-	if(removeStopCityId != null && removeStopCityId !== '')
-		vals['removeStopCityId'] = removeStopCityId;
-
-	var valuePersonTypeId = $formValues.find('.valuePersonTypeId').val();
-	var removePersonTypeId = $formValues.find('.removePersonTypeId').val() === 'true';
-	var setPersonTypeId = removePersonTypeId ? null : $formValues.find('.setPersonTypeId').val();
-	var addPersonTypeId = $formValues.find('.addPersonTypeId').val();
-	if(removePersonTypeId || setPersonTypeId != null && setPersonTypeId !== '')
-		vals['setPersonTypeId'] = setPersonTypeId;
-	if(addPersonTypeId != null && addPersonTypeId !== '')
-		vals['addPersonTypeId'] = addPersonTypeId;
-	var removePersonTypeId = $formValues.find('.removePersonTypeId').val();
-	if(removePersonTypeId != null && removePersonTypeId !== '')
-		vals['removePersonTypeId'] = removePersonTypeId;
-
-	var valuePersonGenderId = $formValues.find('.valuePersonGenderId').val();
-	var removePersonGenderId = $formValues.find('.removePersonGenderId').val() === 'true';
-	var setPersonGenderId = removePersonGenderId ? null : $formValues.find('.setPersonGenderId').val();
-	var addPersonGenderId = $formValues.find('.addPersonGenderId').val();
-	if(removePersonGenderId || setPersonGenderId != null && setPersonGenderId !== '')
-		vals['setPersonGenderId'] = setPersonGenderId;
-	if(addPersonGenderId != null && addPersonGenderId !== '')
-		vals['addPersonGenderId'] = addPersonGenderId;
-	var removePersonGenderId = $formValues.find('.removePersonGenderId').val();
-	if(removePersonGenderId != null && removePersonGenderId !== '')
-		vals['removePersonGenderId'] = removePersonGenderId;
-
-	var valuePersonEthnicityId = $formValues.find('.valuePersonEthnicityId').val();
-	var removePersonEthnicityId = $formValues.find('.removePersonEthnicityId').val() === 'true';
-	var setPersonEthnicityId = removePersonEthnicityId ? null : $formValues.find('.setPersonEthnicityId').val();
-	var addPersonEthnicityId = $formValues.find('.addPersonEthnicityId').val();
-	if(removePersonEthnicityId || setPersonEthnicityId != null && setPersonEthnicityId !== '')
-		vals['setPersonEthnicityId'] = setPersonEthnicityId;
-	if(addPersonEthnicityId != null && addPersonEthnicityId !== '')
-		vals['addPersonEthnicityId'] = addPersonEthnicityId;
-	var removePersonEthnicityId = $formValues.find('.removePersonEthnicityId').val();
-	if(removePersonEthnicityId != null && removePersonEthnicityId !== '')
-		vals['removePersonEthnicityId'] = removePersonEthnicityId;
-
-	var valuePersonRaceId = $formValues.find('.valuePersonRaceId').val();
-	var removePersonRaceId = $formValues.find('.removePersonRaceId').val() === 'true';
-	var setPersonRaceId = removePersonRaceId ? null : $formValues.find('.setPersonRaceId').val();
-	var addPersonRaceId = $formValues.find('.addPersonRaceId').val();
-	if(removePersonRaceId || setPersonRaceId != null && setPersonRaceId !== '')
-		vals['setPersonRaceId'] = setPersonRaceId;
-	if(addPersonRaceId != null && addPersonRaceId !== '')
-		vals['addPersonRaceId'] = addPersonRaceId;
-	var removePersonRaceId = $formValues.find('.removePersonRaceId').val();
-	if(removePersonRaceId != null && removePersonRaceId !== '')
-		vals['removePersonRaceId'] = removePersonRaceId;
-
-	var valueSearchTypeNum = $formValues.find('.valueSearchTypeNum').val();
-	var removeSearchTypeNum = $formValues.find('.removeSearchTypeNum').val() === 'true';
-	var setSearchTypeNum = removeSearchTypeNum ? null : $formValues.find('.setSearchTypeNum').val();
-	var addSearchTypeNum = $formValues.find('.addSearchTypeNum').val();
-	if(removeSearchTypeNum || setSearchTypeNum != null && setSearchTypeNum !== '')
-		vals['setSearchTypeNum'] = setSearchTypeNum;
-	if(addSearchTypeNum != null && addSearchTypeNum !== '')
-		vals['addSearchTypeNum'] = addSearchTypeNum;
-	var removeSearchTypeNum = $formValues.find('.removeSearchTypeNum').val();
-	if(removeSearchTypeNum != null && removeSearchTypeNum !== '')
-		vals['removeSearchTypeNum'] = removeSearchTypeNum;
 
 	var valueSearchBasisId = $formValues.find('.valueSearchBasisId').val();
 	var removeSearchBasisId = $formValues.find('.removeSearchBasisId').val() === 'true';
@@ -868,10 +400,6 @@ function patchSearchBasisFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -1298,10 +826,6 @@ function searchSearchBasisFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -1762,10 +1286,6 @@ function adminsearchSearchBasisFilters($formFilters) {
 		var filterSessionId = $formFilters.find('.valueSessionId').val();
 		if(filterSessionId != null && filterSessionId !== '')
 			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserId = $formFilters.find('.valueUserId').val();
-		if(filterUserId != null && filterUserId !== '')
-			filters.push({ name: 'fq', value: 'userId:' + filterUserId });
 
 		var filterUserKey = $formFilters.find('.valueUserKey').val();
 		if(filterUserKey != null && filterUserKey !== '')
@@ -2388,18 +1908,6 @@ async function websocketSearchBasisInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputSearchBasis' + pk + 'SessionId'));
-			}
-			var val = o['userId'];
-			if(vars.includes('userId')) {
-				$('.inputSearchBasis' + pk + 'UserId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'UserId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'UserId'));
 			}
 			var val = o['userKey'];
 			if(vars.includes('userKey')) {
