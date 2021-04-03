@@ -2,8 +2,8 @@
   "startNum" : 0,
   "foundNum" : 277,
   "returnedNum" : 277,
-  "searchTime" : "0.000 sec",
-  "transmissionTime" : "0.031 sec",
+  "searchTime" : "0.001 sec",
+  "transmissionTime" : "0.067 sec",
   "list" : [ {
     "pk" : "1",
     "inheritPk" : "1416",
