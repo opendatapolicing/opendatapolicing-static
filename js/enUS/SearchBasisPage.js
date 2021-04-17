@@ -56,14 +56,6 @@ async function putcopySearchBasis($formValues, pk, success, error) {
 	if(valueModified != null && valueModified !== '')
 		vals['modified'] = valueModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	if(valueArchived != null && valueArchived !== '')
-		vals['archived'] = valueArchived == 'true';
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	if(valueDeleted != null && valueDeleted !== '')
-		vals['deleted'] = valueDeleted == 'true';
-
 	var valueSearchBasisTitle = $formValues.find('.valueSearchBasisTitle').val();
 	if(valueSearchBasisTitle != null && valueSearchBasisTitle !== '')
 		vals['searchBasisTitle'] = valueSearchBasisTitle;
@@ -78,10 +70,6 @@ async function putcopySearchBasis($formValues, pk, success, error) {
 	var valueInheritPk = $formValues.find('.valueInheritPk').val();
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
-
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	if(valueUserKey != null && valueUserKey !== '')
-		vals['userKey'] = valueUserKey;
 
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
@@ -113,9 +101,6 @@ async function postSearchBasis($formValues, success, error) {
 	if(success == null) {
 		success = function( data, textStatus, jQxhr ) {
 			addGlow($formValues.next('button'));
-			var url = data['pageUrlPk'];
-			if(url)
-				window.location.href = url;
 		};
 	}
 	if(error == null) {
@@ -136,14 +121,6 @@ async function postSearchBasis($formValues, success, error) {
 	if(valueModified != null && valueModified !== '')
 		vals['modified'] = valueModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	if(valueArchived != null && valueArchived !== '')
-		vals['archived'] = valueArchived == 'true';
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	if(valueDeleted != null && valueDeleted !== '')
-		vals['deleted'] = valueDeleted == 'true';
-
 	var valueSearchBasisTitle = $formValues.find('.valueSearchBasisTitle').val();
 	if(valueSearchBasisTitle != null && valueSearchBasisTitle !== '')
 		vals['searchBasisTitle'] = valueSearchBasisTitle;
@@ -155,10 +132,6 @@ async function postSearchBasis($formValues, success, error) {
 	var valueInheritPk = $formValues.find('.valueInheritPk').val();
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
-
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	if(valueUserKey != null && valueUserKey !== '')
-		vals['userKey'] = valueUserKey;
 
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
@@ -234,38 +207,6 @@ async function patchSearchBasis($formFilters, $formValues, pk, success, error) {
 	if(removeModified != null && removeModified !== '')
 		vals['removeModified'] = removeModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	var removeArchived = $formValues.find('.removeArchived').val() === 'true';
-	var valueArchivedSelectVal = $formValues.find('select.setArchived').val();
-	var valueArchived = null;
-	if(valueArchivedSelectVal != null && valueArchivedSelectVal !== '')
-		valueArchived = valueArchivedSelectVal == 'true';
-	var setArchived = removeArchived ? null : valueArchived;
-	var addArchived = $formValues.find('.addArchived').prop('checked');
-	if(removeArchived || setArchived != null && setArchived !== '')
-		vals['setArchived'] = setArchived;
-	if(addArchived != null && addArchived !== '')
-		vals['addArchived'] = addArchived;
-	var removeArchived = $formValues.find('.removeArchived').prop('checked');
-	if(removeArchived != null && removeArchived !== '')
-		vals['removeArchived'] = removeArchived;
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	var removeDeleted = $formValues.find('.removeDeleted').val() === 'true';
-	var valueDeletedSelectVal = $formValues.find('select.setDeleted').val();
-	var valueDeleted = null;
-	if(valueDeletedSelectVal != null && valueDeletedSelectVal !== '')
-		valueDeleted = valueDeletedSelectVal == 'true';
-	var setDeleted = removeDeleted ? null : valueDeleted;
-	var addDeleted = $formValues.find('.addDeleted').prop('checked');
-	if(removeDeleted || setDeleted != null && setDeleted !== '')
-		vals['setDeleted'] = setDeleted;
-	if(addDeleted != null && addDeleted !== '')
-		vals['addDeleted'] = addDeleted;
-	var removeDeleted = $formValues.find('.removeDeleted').prop('checked');
-	if(removeDeleted != null && removeDeleted !== '')
-		vals['removeDeleted'] = removeDeleted;
-
 	var valueSearchBasisTitle = $formValues.find('.valueSearchBasisTitle').val();
 	var removeSearchBasisTitle = $formValues.find('.removeSearchBasisTitle').val() === 'true';
 	var setSearchBasisTitle = removeSearchBasisTitle ? null : $formValues.find('.setSearchBasisTitle').val();
@@ -293,18 +234,6 @@ async function patchSearchBasis($formFilters, $formValues, pk, success, error) {
 	var removeInheritPk = $formValues.find('.removeInheritPk').val();
 	if(removeInheritPk != null && removeInheritPk !== '')
 		vals['removeInheritPk'] = removeInheritPk;
-
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	var removeUserKey = $formValues.find('.removeUserKey').val() === 'true';
-	var setUserKey = removeUserKey ? null : $formValues.find('.setUserKey').val();
-	var addUserKey = $formValues.find('.addUserKey').val();
-	if(removeUserKey || setUserKey != null && setUserKey !== '')
-		vals['setUserKey'] = setUserKey;
-	if(addUserKey != null && addUserKey !== '')
-		vals['addUserKey'] = addUserKey;
-	var removeUserKey = $formValues.find('.removeUserKey').val();
-	if(removeUserKey != null && removeUserKey !== '')
-		vals['removeUserKey'] = removeUserKey;
 
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	var removeObjectTitle = $formValues.find('.removeObjectTitle').val() === 'true';
@@ -349,26 +278,6 @@ function patchSearchBasisFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
 		var filterSearchBasisTitle = $formFilters.find('.valueSearchBasisTitle').val();
 		if(filterSearchBasisTitle != null && filterSearchBasisTitle !== '')
 			filters.push({ name: 'fq', value: 'searchBasisTitle:' + filterSearchBasisTitle });
@@ -397,14 +306,6 @@ function patchSearchBasisFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -417,29 +318,13 @@ function patchSearchBasisFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterSearchBasisKey = $formFilters.find('.valueSearchBasisKey').val();
 		if(filterSearchBasisKey != null && filterSearchBasisKey !== '')
 			filters.push({ name: 'fq', value: 'searchBasisKey:' + filterSearchBasisKey });
 
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -704,14 +589,6 @@ function patchSearchBasisFilters($formFilters) {
 		var filterSearchBasisId = $formFilters.find('.valueSearchBasisId').val();
 		if(filterSearchBasisId != null && filterSearchBasisId !== '')
 			filters.push({ name: 'fq', value: 'searchBasisId:' + filterSearchBasisId });
-
-		var filterSearchBasisShortName = $formFilters.find('.valueSearchBasisShortName').val();
-		if(filterSearchBasisShortName != null && filterSearchBasisShortName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisShortName:' + filterSearchBasisShortName });
-
-		var filterSearchBasisCompleteName = $formFilters.find('.valueSearchBasisCompleteName').val();
-		if(filterSearchBasisCompleteName != null && filterSearchBasisCompleteName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisCompleteName:' + filterSearchBasisCompleteName });
 	}
 	return filters;
 }
@@ -775,26 +652,6 @@ function searchSearchBasisFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
 		var filterSearchBasisTitle = $formFilters.find('.valueSearchBasisTitle').val();
 		if(filterSearchBasisTitle != null && filterSearchBasisTitle !== '')
 			filters.push({ name: 'fq', value: 'searchBasisTitle:' + filterSearchBasisTitle });
@@ -823,14 +680,6 @@ function searchSearchBasisFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -843,29 +692,13 @@ function searchSearchBasisFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterSearchBasisKey = $formFilters.find('.valueSearchBasisKey').val();
 		if(filterSearchBasisKey != null && filterSearchBasisKey !== '')
 			filters.push({ name: 'fq', value: 'searchBasisKey:' + filterSearchBasisKey });
 
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -1130,14 +963,6 @@ function searchSearchBasisFilters($formFilters) {
 		var filterSearchBasisId = $formFilters.find('.valueSearchBasisId').val();
 		if(filterSearchBasisId != null && filterSearchBasisId !== '')
 			filters.push({ name: 'fq', value: 'searchBasisId:' + filterSearchBasisId });
-
-		var filterSearchBasisShortName = $formFilters.find('.valueSearchBasisShortName').val();
-		if(filterSearchBasisShortName != null && filterSearchBasisShortName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisShortName:' + filterSearchBasisShortName });
-
-		var filterSearchBasisCompleteName = $formFilters.find('.valueSearchBasisCompleteName').val();
-		if(filterSearchBasisCompleteName != null && filterSearchBasisCompleteName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisCompleteName:' + filterSearchBasisCompleteName });
 	}
 	return filters;
 }
@@ -1153,31 +978,13 @@ function searchSearchBasisVals(filters, success, error) {
 	});
 }
 
-function suggestSearchBasisObjectSuggest($formFilters, $list) {
-	success = function( data, textStatus, jQxhr ) {
-		$list.empty();
-		$.each(data['list'], function(i, o) {
-			var $i = $('<i>').attr('class', 'far fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['searchBasisCompleteName']);
-			var $li = $('<li>');
-			var $a = $('<a>').attr('href', o['pageUrlPk']);
-			$a.append($i);
-			$a.append($span);
-			$li.append($a);
-			$list.append($li);
-		});
-	};
-	error = function( jqXhr, textStatus, errorThrown ) {};
-	searchSearchBasisVals($formFilters, success, error);
-}
-
 function suggestSearchBasisSearchKey(filters, $list, pk = null, attribute=true) {
 	success = function( data, textStatus, jQxhr ) {
 		$list.empty();
 		$.each(data['list'], function(i, o) {
 			var $i = $('<i>').attr('class', 'fa fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficSearchCompleteName']);
-			var $a = $('<a>').attr('id', o['pk']).attr('href', o['pageUrlPk']);
+			var $span = $('<span>').attr('class', '').text(o['objectTitle']);
+			var $a = $('<span>');
 			$a.append($i);
 			$a.append($span);
 			var val = o['searchBasisKeys'];
@@ -1235,26 +1042,6 @@ function adminsearchSearchBasisFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
 		var filterSearchBasisTitle = $formFilters.find('.valueSearchBasisTitle').val();
 		if(filterSearchBasisTitle != null && filterSearchBasisTitle !== '')
 			filters.push({ name: 'fq', value: 'searchBasisTitle:' + filterSearchBasisTitle });
@@ -1283,14 +1070,6 @@ function adminsearchSearchBasisFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -1303,29 +1082,13 @@ function adminsearchSearchBasisFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterSearchBasisKey = $formFilters.find('.valueSearchBasisKey').val();
 		if(filterSearchBasisKey != null && filterSearchBasisKey !== '')
 			filters.push({ name: 'fq', value: 'searchBasisKey:' + filterSearchBasisKey });
 
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -1590,14 +1353,6 @@ function adminsearchSearchBasisFilters($formFilters) {
 		var filterSearchBasisId = $formFilters.find('.valueSearchBasisId').val();
 		if(filterSearchBasisId != null && filterSearchBasisId !== '')
 			filters.push({ name: 'fq', value: 'searchBasisId:' + filterSearchBasisId });
-
-		var filterSearchBasisShortName = $formFilters.find('.valueSearchBasisShortName').val();
-		if(filterSearchBasisShortName != null && filterSearchBasisShortName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisShortName:' + filterSearchBasisShortName });
-
-		var filterSearchBasisCompleteName = $formFilters.find('.valueSearchBasisCompleteName').val();
-		if(filterSearchBasisCompleteName != null && filterSearchBasisCompleteName !== '')
-			filters.push({ name: 'fq', value: 'searchBasisCompleteName:' + filterSearchBasisCompleteName });
 	}
 	return filters;
 }
@@ -1613,31 +1368,13 @@ function adminsearchSearchBasisVals(filters, success, error) {
 	});
 }
 
-function suggestSearchBasisObjectSuggest($formFilters, $list) {
-	success = function( data, textStatus, jQxhr ) {
-		$list.empty();
-		$.each(data['list'], function(i, o) {
-			var $i = $('<i>').attr('class', 'far fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['searchBasisCompleteName']);
-			var $li = $('<li>');
-			var $a = $('<a>').attr('href', o['pageUrlPk']);
-			$a.append($i);
-			$a.append($span);
-			$li.append($a);
-			$list.append($li);
-		});
-	};
-	error = function( jqXhr, textStatus, errorThrown ) {};
-	searchSearchBasisVals($formFilters, success, error);
-}
-
 function suggestSearchBasisSearchKey(filters, $list, pk = null, attribute=true) {
 	success = function( data, textStatus, jQxhr ) {
 		$list.empty();
 		$.each(data['list'], function(i, o) {
 			var $i = $('<i>').attr('class', 'fa fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficSearchCompleteName']);
-			var $a = $('<a>').attr('id', o['pk']).attr('href', o['pageUrlPk']);
+			var $span = $('<span>').attr('class', '').text(o['objectTitle']);
+			var $a = $('<span>');
 			$a.append($i);
 			$a.append($span);
 			var val = o['searchBasisKeys'];
@@ -1680,12 +1417,12 @@ async function websocketSearchBasis(success) {
 			var numFound = parseInt(json['numFound']);
 			var numPATCH = parseInt(json['numPATCH']);
 			var percent = Math.floor( numPATCH / numFound * 100 ) + '%';
-			var $box = $('<div>').attr('class', 'w3-display-topright w3-quarter box-' + id + ' ').attr('id', 'box-' + id).attr('data-numPATCH', numPATCH);
+			var $box = $('<div>').attr('class', 'w3-quarter box-' + id + ' ').attr('id', 'box-' + id).attr('data-numPATCH', numPATCH);
 			var $margin = $('<div>').attr('class', 'w3-margin ').attr('id', 'margin-' + id);
 			var $card = $('<div>').attr('class', 'w3-card w3-white ').attr('id', 'card-' + id);
 			var $header = $('<div>').attr('class', 'w3-container fa-pale-green ').attr('id', 'header-' + id);
 			var $i = $('<i>').attr('class', 'far fa-newspaper w3-margin-right ').attr('id', 'icon-' + id);
-			var $headerSpan = $('<span>').attr('class', '').text('modify search bases');
+			var $headerSpan = $('<span>').attr('class', '').text('modify search bases' + id);
 			var $x = $('<span>').attr('class', 'w3-button w3-display-topright ').attr('onclick', '$("#card-' + id + '").hide(); ').attr('id', 'x-' + id);
 			var $body = $('<div>').attr('class', 'w3-container w3-padding ').attr('id', 'text-' + id);
 			var $bar = $('<div>').attr('class', 'w3-light-gray ').attr('id', 'bar-' + id);
@@ -1704,8 +1441,7 @@ async function websocketSearchBasis(success) {
 				if(!$old_box.size()) {
 					$('.top-box').append($box);
 				} else if($old_box && $old_box.attr('data-numPATCH') < numFound) {
-					$('.box-' + id).remove();
-					$('.top-box').append($box);
+					$('.box-' + id).html($margin);
 				}
 			} else {
 				$('.box-' + id).remove();
@@ -1777,30 +1513,6 @@ async function websocketSearchBasisInner(apiRequest) {
 				});
 				addGlow($('.inputSearchBasis' + pk + 'Modified'));
 			}
-			var val = o['archived'];
-			if(vars.includes('archived')) {
-				$('.inputSearchBasis' + pk + 'Archived').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'Archived').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'Archived'));
-			}
-			var val = o['deleted'];
-			if(vars.includes('deleted')) {
-				$('.inputSearchBasis' + pk + 'Deleted').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'Deleted').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'Deleted'));
-			}
 			var val = o['searchBasisTitle'];
 			if(vars.includes('searchBasisTitle')) {
 				$('.inputSearchBasis' + pk + 'SearchBasisTitle').each(function() {
@@ -1849,18 +1561,6 @@ async function websocketSearchBasisInner(apiRequest) {
 				});
 				addGlow($('.inputSearchBasis' + pk + 'Id'));
 			}
-			var val = o['modifiedIsoOffsetDateTime'];
-			if(vars.includes('modifiedIsoOffsetDateTime')) {
-				$('.inputSearchBasis' + pk + 'ModifiedIsoOffsetDateTime').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'ModifiedIsoOffsetDateTime').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'ModifiedIsoOffsetDateTime'));
-			}
 			var val = o['classCanonicalName'];
 			if(vars.includes('classCanonicalName')) {
 				$('.inputSearchBasis' + pk + 'ClassCanonicalName').each(function() {
@@ -1896,30 +1596,6 @@ async function websocketSearchBasisInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputSearchBasis' + pk + 'ClassCanonicalNames'));
-			}
-			var val = o['sessionId'];
-			if(vars.includes('sessionId')) {
-				$('.inputSearchBasis' + pk + 'SessionId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'SessionId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'SessionId'));
-			}
-			var val = o['userKey'];
-			if(vars.includes('userKey')) {
-				$('.inputSearchBasis' + pk + 'UserKey').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'UserKey').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'UserKey'));
 			}
 			var val = o['saves'];
 			if(vars.includes('saves')) {
@@ -1957,54 +1633,6 @@ async function websocketSearchBasisInner(apiRequest) {
 				});
 				addGlow($('.inputSearchBasis' + pk + 'ObjectId'));
 			}
-			var val = o['objectSuggest'];
-			if(vars.includes('objectSuggest')) {
-				$('.inputSearchBasis' + pk + 'ObjectSuggest').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'ObjectSuggest').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'ObjectSuggest'));
-			}
-			var val = o['objectText'];
-			if(vars.includes('objectText')) {
-				$('.inputSearchBasis' + pk + 'ObjectText').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'ObjectText').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'ObjectText'));
-			}
-			var val = o['pageUrlId'];
-			if(vars.includes('pageUrlId')) {
-				$('.inputSearchBasis' + pk + 'PageUrlId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'PageUrlId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'PageUrlId'));
-			}
-			var val = o['pageUrlPk'];
-			if(vars.includes('pageUrlPk')) {
-				$('.inputSearchBasis' + pk + 'PageUrlPk').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'PageUrlPk').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'PageUrlPk'));
-			}
 			var val = o['searchBasisKey'];
 			if(vars.includes('searchBasisKey')) {
 				$('.inputSearchBasis' + pk + 'SearchBasisKey').each(function() {
@@ -2017,17 +1645,17 @@ async function websocketSearchBasisInner(apiRequest) {
 				});
 				addGlow($('.inputSearchBasis' + pk + 'SearchBasisKey'));
 			}
-			var val = o['stopAgencyTitle'];
-			if(vars.includes('stopAgencyTitle')) {
-				$('.inputSearchBasis' + pk + 'StopAgencyTitle').each(function() {
+			var val = o['agencyTitle'];
+			if(vars.includes('agencyTitle')) {
+				$('.inputSearchBasis' + pk + 'AgencyTitle').each(function() {
 					if(val !== $(this).val())
 						$(this).val(val);
 				});
-				$('.varSearchBasis' + pk + 'StopAgencyTitle').each(function() {
+				$('.varSearchBasis' + pk + 'AgencyTitle').each(function() {
 					if(val !== $(this).text())
 						$(this).text(val);
 				});
-				addGlow($('.inputSearchBasis' + pk + 'StopAgencyTitle'));
+				addGlow($('.inputSearchBasis' + pk + 'AgencyTitle'));
 			}
 			var val = o['stopDateTime'];
 			if(vars.includes('stopDateTime')) {
@@ -2496,30 +2124,6 @@ async function websocketSearchBasisInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputSearchBasis' + pk + 'SearchBasisId'));
-			}
-			var val = o['searchBasisShortName'];
-			if(vars.includes('searchBasisShortName')) {
-				$('.inputSearchBasis' + pk + 'SearchBasisShortName').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'SearchBasisShortName').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'SearchBasisShortName'));
-			}
-			var val = o['searchBasisCompleteName'];
-			if(vars.includes('searchBasisCompleteName')) {
-				$('.inputSearchBasis' + pk + 'SearchBasisCompleteName').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varSearchBasis' + pk + 'SearchBasisCompleteName').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputSearchBasis' + pk + 'SearchBasisCompleteName'));
 			}
 		});
 	}

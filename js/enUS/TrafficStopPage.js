@@ -56,17 +56,9 @@ async function putcopyTrafficStop($formValues, pk, success, error) {
 	if(valueModified != null && valueModified !== '')
 		vals['modified'] = valueModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	if(valueArchived != null && valueArchived !== '')
-		vals['archived'] = valueArchived == 'true';
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	if(valueDeleted != null && valueDeleted !== '')
-		vals['deleted'] = valueDeleted == 'true';
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	if(valueStopAgencyTitle != null && valueStopAgencyTitle !== '')
-		vals['stopAgencyTitle'] = valueStopAgencyTitle;
+	var valueAgencyTitle = $formValues.find('.valueAgencyTitle').val();
+	if(valueAgencyTitle != null && valueAgencyTitle !== '')
+		vals['agencyTitle'] = valueAgencyTitle;
 
 	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
 	if(valueStopDateTime != null && valueStopDateTime !== '')
@@ -131,13 +123,17 @@ async function putcopyTrafficStop($formValues, pk, success, error) {
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
 
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	if(valueUserKey != null && valueUserKey !== '')
-		vals['userKey'] = valueUserKey;
-
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
+
+	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
+	if(valueTrafficStopKey != null && valueTrafficStopKey !== '')
+		vals['trafficStopKey'] = valueTrafficStopKey;
+
+	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
+	if(valueStateAbbreviation != null && valueStateAbbreviation !== '')
+		vals['stateAbbreviation'] = valueStateAbbreviation;
 
 	var valueStopYear = $formValues.find('.valueStopYear').val();
 	if(valueStopYear != null && valueStopYear !== '')
@@ -173,9 +169,6 @@ async function postTrafficStop($formValues, success, error) {
 	if(success == null) {
 		success = function( data, textStatus, jQxhr ) {
 			addGlow($formValues.next('button'));
-			var url = data['pageUrlPk'];
-			if(url)
-				window.location.href = url;
 		};
 	}
 	if(error == null) {
@@ -196,17 +189,9 @@ async function postTrafficStop($formValues, success, error) {
 	if(valueModified != null && valueModified !== '')
 		vals['modified'] = valueModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	if(valueArchived != null && valueArchived !== '')
-		vals['archived'] = valueArchived == 'true';
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	if(valueDeleted != null && valueDeleted !== '')
-		vals['deleted'] = valueDeleted == 'true';
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	if(valueStopAgencyTitle != null && valueStopAgencyTitle !== '')
-		vals['stopAgencyTitle'] = valueStopAgencyTitle;
+	var valueAgencyTitle = $formValues.find('.valueAgencyTitle').val();
+	if(valueAgencyTitle != null && valueAgencyTitle !== '')
+		vals['agencyTitle'] = valueAgencyTitle;
 
 	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
 	if(valueStopDateTime != null && valueStopDateTime !== '')
@@ -271,13 +256,17 @@ async function postTrafficStop($formValues, success, error) {
 	if(valueInheritPk != null && valueInheritPk !== '')
 		vals['inheritPk'] = valueInheritPk;
 
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	if(valueUserKey != null && valueUserKey !== '')
-		vals['userKey'] = valueUserKey;
-
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
+
+	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
+	if(valueTrafficStopKey != null && valueTrafficStopKey !== '')
+		vals['trafficStopKey'] = valueTrafficStopKey;
+
+	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
+	if(valueStateAbbreviation != null && valueStateAbbreviation !== '')
+		vals['stateAbbreviation'] = valueStateAbbreviation;
 
 	var valueStopYear = $formValues.find('.valueStopYear').val();
 	if(valueStopYear != null && valueStopYear !== '')
@@ -357,49 +346,17 @@ async function patchTrafficStop($formFilters, $formValues, pk, success, error) {
 	if(removeModified != null && removeModified !== '')
 		vals['removeModified'] = removeModified;
 
-	var valueArchived = $formValues.find('.valueArchived').val();
-	var removeArchived = $formValues.find('.removeArchived').val() === 'true';
-	var valueArchivedSelectVal = $formValues.find('select.setArchived').val();
-	var valueArchived = null;
-	if(valueArchivedSelectVal != null && valueArchivedSelectVal !== '')
-		valueArchived = valueArchivedSelectVal == 'true';
-	var setArchived = removeArchived ? null : valueArchived;
-	var addArchived = $formValues.find('.addArchived').prop('checked');
-	if(removeArchived || setArchived != null && setArchived !== '')
-		vals['setArchived'] = setArchived;
-	if(addArchived != null && addArchived !== '')
-		vals['addArchived'] = addArchived;
-	var removeArchived = $formValues.find('.removeArchived').prop('checked');
-	if(removeArchived != null && removeArchived !== '')
-		vals['removeArchived'] = removeArchived;
-
-	var valueDeleted = $formValues.find('.valueDeleted').val();
-	var removeDeleted = $formValues.find('.removeDeleted').val() === 'true';
-	var valueDeletedSelectVal = $formValues.find('select.setDeleted').val();
-	var valueDeleted = null;
-	if(valueDeletedSelectVal != null && valueDeletedSelectVal !== '')
-		valueDeleted = valueDeletedSelectVal == 'true';
-	var setDeleted = removeDeleted ? null : valueDeleted;
-	var addDeleted = $formValues.find('.addDeleted').prop('checked');
-	if(removeDeleted || setDeleted != null && setDeleted !== '')
-		vals['setDeleted'] = setDeleted;
-	if(addDeleted != null && addDeleted !== '')
-		vals['addDeleted'] = addDeleted;
-	var removeDeleted = $formValues.find('.removeDeleted').prop('checked');
-	if(removeDeleted != null && removeDeleted !== '')
-		vals['removeDeleted'] = removeDeleted;
-
-	var valueStopAgencyTitle = $formValues.find('.valueStopAgencyTitle').val();
-	var removeStopAgencyTitle = $formValues.find('.removeStopAgencyTitle').val() === 'true';
-	var setStopAgencyTitle = removeStopAgencyTitle ? null : $formValues.find('.setStopAgencyTitle').val();
-	var addStopAgencyTitle = $formValues.find('.addStopAgencyTitle').val();
-	if(removeStopAgencyTitle || setStopAgencyTitle != null && setStopAgencyTitle !== '')
-		vals['setStopAgencyTitle'] = setStopAgencyTitle;
-	if(addStopAgencyTitle != null && addStopAgencyTitle !== '')
-		vals['addStopAgencyTitle'] = addStopAgencyTitle;
-	var removeStopAgencyTitle = $formValues.find('.removeStopAgencyTitle').val();
-	if(removeStopAgencyTitle != null && removeStopAgencyTitle !== '')
-		vals['removeStopAgencyTitle'] = removeStopAgencyTitle;
+	var valueAgencyTitle = $formValues.find('.valueAgencyTitle').val();
+	var removeAgencyTitle = $formValues.find('.removeAgencyTitle').val() === 'true';
+	var setAgencyTitle = removeAgencyTitle ? null : $formValues.find('.setAgencyTitle').val();
+	var addAgencyTitle = $formValues.find('.addAgencyTitle').val();
+	if(removeAgencyTitle || setAgencyTitle != null && setAgencyTitle !== '')
+		vals['setAgencyTitle'] = setAgencyTitle;
+	if(addAgencyTitle != null && addAgencyTitle !== '')
+		vals['addAgencyTitle'] = addAgencyTitle;
+	var removeAgencyTitle = $formValues.find('.removeAgencyTitle').val();
+	if(removeAgencyTitle != null && removeAgencyTitle !== '')
+		vals['removeAgencyTitle'] = removeAgencyTitle;
 
 	var valueStopDateTime = $formValues.find('.valueStopDateTime').val();
 	var removeStopDateTime = $formValues.find('.removeStopDateTime').val() === 'true';
@@ -601,18 +558,6 @@ async function patchTrafficStop($formFilters, $formValues, pk, success, error) {
 	if(removeInheritPk != null && removeInheritPk !== '')
 		vals['removeInheritPk'] = removeInheritPk;
 
-	var valueUserKey = $formValues.find('.valueUserKey').val();
-	var removeUserKey = $formValues.find('.removeUserKey').val() === 'true';
-	var setUserKey = removeUserKey ? null : $formValues.find('.setUserKey').val();
-	var addUserKey = $formValues.find('.addUserKey').val();
-	if(removeUserKey || setUserKey != null && setUserKey !== '')
-		vals['setUserKey'] = setUserKey;
-	if(addUserKey != null && addUserKey !== '')
-		vals['addUserKey'] = addUserKey;
-	var removeUserKey = $formValues.find('.removeUserKey').val();
-	if(removeUserKey != null && removeUserKey !== '')
-		vals['removeUserKey'] = removeUserKey;
-
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	var removeObjectTitle = $formValues.find('.removeObjectTitle').val() === 'true';
 	var setObjectTitle = removeObjectTitle ? null : $formValues.find('.setObjectTitle').val();
@@ -624,6 +569,30 @@ async function patchTrafficStop($formFilters, $formValues, pk, success, error) {
 	var removeObjectTitle = $formValues.find('.removeObjectTitle').val();
 	if(removeObjectTitle != null && removeObjectTitle !== '')
 		vals['removeObjectTitle'] = removeObjectTitle;
+
+	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
+	var removeTrafficStopKey = $formValues.find('.removeTrafficStopKey').val() === 'true';
+	var setTrafficStopKey = removeTrafficStopKey ? null : $formValues.find('.setTrafficStopKey').val();
+	var addTrafficStopKey = $formValues.find('.addTrafficStopKey').val();
+	if(removeTrafficStopKey || setTrafficStopKey != null && setTrafficStopKey !== '')
+		vals['setTrafficStopKey'] = setTrafficStopKey;
+	if(addTrafficStopKey != null && addTrafficStopKey !== '')
+		vals['addTrafficStopKey'] = addTrafficStopKey;
+	var removeTrafficStopKey = $formValues.find('.removeTrafficStopKey').val();
+	if(removeTrafficStopKey != null && removeTrafficStopKey !== '')
+		vals['removeTrafficStopKey'] = removeTrafficStopKey;
+
+	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
+	var removeStateAbbreviation = $formValues.find('.removeStateAbbreviation').val() === 'true';
+	var setStateAbbreviation = removeStateAbbreviation ? null : $formValues.find('.setStateAbbreviation').val();
+	var addStateAbbreviation = $formValues.find('.addStateAbbreviation').val();
+	if(removeStateAbbreviation || setStateAbbreviation != null && setStateAbbreviation !== '')
+		vals['setStateAbbreviation'] = setStateAbbreviation;
+	if(addStateAbbreviation != null && addStateAbbreviation !== '')
+		vals['addStateAbbreviation'] = addStateAbbreviation;
+	var removeStateAbbreviation = $formValues.find('.removeStateAbbreviation').val();
+	if(removeStateAbbreviation != null && removeStateAbbreviation !== '')
+		vals['removeStateAbbreviation'] = removeStateAbbreviation;
 
 	var valueStopYear = $formValues.find('.valueStopYear').val();
 	var removeStopYear = $formValues.find('.removeStopYear').val() === 'true';
@@ -680,29 +649,9 @@ function patchTrafficStopFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -822,14 +771,6 @@ function patchTrafficStopFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -842,25 +783,21 @@ function patchTrafficStopFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterTrafficStopKey = $formFilters.find('.valueTrafficStopKey').val();
 		if(filterTrafficStopKey != null && filterTrafficStopKey !== '')
 			filters.push({ name: 'fq', value: 'trafficStopKey:' + filterTrafficStopKey });
+
+		var filterStateAbbreviation = $formFilters.find('.valueStateAbbreviation').val();
+		if(filterStateAbbreviation != null && filterStateAbbreviation !== '')
+			filters.push({ name: 'fq', value: 'stateAbbreviation:' + filterStateAbbreviation });
+
+		var filterStateKey = $formFilters.find('.valueStateKey').val();
+		if(filterStateKey != null && filterStateKey !== '')
+			filters.push({ name: 'fq', value: 'stateKey:' + filterStateKey });
+
+		var filterStateName = $formFilters.find('.valueStateName').val();
+		if(filterStateName != null && filterStateName !== '')
+			filters.push({ name: 'fq', value: 'stateName:' + filterStateName });
 
 		var filterAgencyKey = $formFilters.find('.valueAgencyKey').val();
 		if(filterAgencyKey != null && filterAgencyKey !== '')
@@ -885,10 +822,6 @@ function patchTrafficStopFilters($formFilters) {
 		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
 		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
-
-		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
-		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
-			filters.push({ name: 'fq', value: 'trafficStopCompleteName:' + filterTrafficStopCompleteName });
 	}
 	return filters;
 }
@@ -952,29 +885,9 @@ function searchTrafficStopFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -1094,14 +1007,6 @@ function searchTrafficStopFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -1114,25 +1019,21 @@ function searchTrafficStopFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterTrafficStopKey = $formFilters.find('.valueTrafficStopKey').val();
 		if(filterTrafficStopKey != null && filterTrafficStopKey !== '')
 			filters.push({ name: 'fq', value: 'trafficStopKey:' + filterTrafficStopKey });
+
+		var filterStateAbbreviation = $formFilters.find('.valueStateAbbreviation').val();
+		if(filterStateAbbreviation != null && filterStateAbbreviation !== '')
+			filters.push({ name: 'fq', value: 'stateAbbreviation:' + filterStateAbbreviation });
+
+		var filterStateKey = $formFilters.find('.valueStateKey').val();
+		if(filterStateKey != null && filterStateKey !== '')
+			filters.push({ name: 'fq', value: 'stateKey:' + filterStateKey });
+
+		var filterStateName = $formFilters.find('.valueStateName').val();
+		if(filterStateName != null && filterStateName !== '')
+			filters.push({ name: 'fq', value: 'stateName:' + filterStateName });
 
 		var filterAgencyKey = $formFilters.find('.valueAgencyKey').val();
 		if(filterAgencyKey != null && filterAgencyKey !== '')
@@ -1157,10 +1058,6 @@ function searchTrafficStopFilters($formFilters) {
 		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
 		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
-
-		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
-		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
-			filters.push({ name: 'fq', value: 'trafficStopCompleteName:' + filterTrafficStopCompleteName });
 	}
 	return filters;
 }
@@ -1176,31 +1073,13 @@ function searchTrafficStopVals(filters, success, error) {
 	});
 }
 
-function suggestTrafficStopObjectSuggest($formFilters, $list) {
-	success = function( data, textStatus, jQxhr ) {
-		$list.empty();
-		$.each(data['list'], function(i, o) {
-			var $i = $('<i>').attr('class', 'far fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficStopCompleteName']);
-			var $li = $('<li>');
-			var $a = $('<a>').attr('href', o['pageUrlPk']);
-			$a.append($i);
-			$a.append($span);
-			$li.append($a);
-			$list.append($li);
-		});
-	};
-	error = function( jqXhr, textStatus, errorThrown ) {};
-	searchTrafficStopVals($formFilters, success, error);
-}
-
 function suggestTrafficStopPersonKeys(filters, $list, pk = null, attribute=true) {
 	success = function( data, textStatus, jQxhr ) {
 		$list.empty();
 		$.each(data['list'], function(i, o) {
 			var $i = $('<i>').attr('class', 'fa fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficPersonCompleteName']);
-			var $a = $('<a>').attr('id', o['pk']).attr('href', o['pageUrlPk']);
+			var $span = $('<span>').attr('class', '').text(o['objectTitle']);
+			var $a = $('<span>');
 			$a.append($i);
 			$a.append($span);
 			var val = o['trafficStopKey'];
@@ -1258,29 +1137,9 @@ function adminsearchTrafficStopFilters($formFilters) {
 		if(filterModified != null && filterModified !== '')
 			filters.push({ name: 'fq', value: 'modified:' + filterModified });
 
-		var $filterArchivedCheckbox = $formFilters.find('input.valueArchived[type = "checkbox"]');
-		var $filterArchivedSelect = $formFilters.find('select.valueArchived');
-		var filterArchived = $filterArchivedSelect.length ? $filterArchivedSelect.val() : $filterArchivedCheckbox.prop('checked');
-		var filterArchivedSelectVal = $formFilters.find('select.filterArchived').val();
-		var filterArchived = null;
-		if(filterArchivedSelectVal !== '')
-			filterArchived = filterArchivedSelectVal == 'true';
-		if(filterArchived != null && filterArchived === true)
-			filters.push({ name: 'fq', value: 'archived:' + filterArchived });
-
-		var $filterDeletedCheckbox = $formFilters.find('input.valueDeleted[type = "checkbox"]');
-		var $filterDeletedSelect = $formFilters.find('select.valueDeleted');
-		var filterDeleted = $filterDeletedSelect.length ? $filterDeletedSelect.val() : $filterDeletedCheckbox.prop('checked');
-		var filterDeletedSelectVal = $formFilters.find('select.filterDeleted').val();
-		var filterDeleted = null;
-		if(filterDeletedSelectVal !== '')
-			filterDeleted = filterDeletedSelectVal == 'true';
-		if(filterDeleted != null && filterDeleted === true)
-			filters.push({ name: 'fq', value: 'deleted:' + filterDeleted });
-
-		var filterStopAgencyTitle = $formFilters.find('.valueStopAgencyTitle').val();
-		if(filterStopAgencyTitle != null && filterStopAgencyTitle !== '')
-			filters.push({ name: 'fq', value: 'stopAgencyTitle:' + filterStopAgencyTitle });
+		var filterAgencyTitle = $formFilters.find('.valueAgencyTitle').val();
+		if(filterAgencyTitle != null && filterAgencyTitle !== '')
+			filters.push({ name: 'fq', value: 'agencyTitle:' + filterAgencyTitle });
 
 		var filterStopDateTime = $formFilters.find('.valueStopDateTime').val();
 		if(filterStopDateTime != null && filterStopDateTime !== '')
@@ -1400,14 +1259,6 @@ function adminsearchTrafficStopFilters($formFilters) {
 		if(filterClassCanonicalNames != null && filterClassCanonicalNames !== '')
 			filters.push({ name: 'fq', value: 'classCanonicalNames:' + filterClassCanonicalNames });
 
-		var filterSessionId = $formFilters.find('.valueSessionId').val();
-		if(filterSessionId != null && filterSessionId !== '')
-			filters.push({ name: 'fq', value: 'sessionId:' + filterSessionId });
-
-		var filterUserKey = $formFilters.find('.valueUserKey').val();
-		if(filterUserKey != null && filterUserKey !== '')
-			filters.push({ name: 'fq', value: 'userKey:' + filterUserKey });
-
 		var filterSaves = $formFilters.find('.valueSaves').val();
 		if(filterSaves != null && filterSaves !== '')
 			filters.push({ name: 'fq', value: 'saves:' + filterSaves });
@@ -1420,25 +1271,21 @@ function adminsearchTrafficStopFilters($formFilters) {
 		if(filterObjectId != null && filterObjectId !== '')
 			filters.push({ name: 'fq', value: 'objectId:' + filterObjectId });
 
-		var filterObjectSuggest = $formFilters.find('.valueObjectSuggest').val();
-		if(filterObjectSuggest != null && filterObjectSuggest !== '')
-			filters.push({ name: 'q', value: 'objectSuggest:' + filterObjectSuggest });
-
-		var filterObjectText = $formFilters.find('.valueObjectText').val();
-		if(filterObjectText != null && filterObjectText !== '')
-			filters.push({ name: 'fq', value: 'objectText:' + filterObjectText });
-
-		var filterPageUrlId = $formFilters.find('.valuePageUrlId').val();
-		if(filterPageUrlId != null && filterPageUrlId !== '')
-			filters.push({ name: 'fq', value: 'pageUrlId:' + filterPageUrlId });
-
-		var filterPageUrlPk = $formFilters.find('.valuePageUrlPk').val();
-		if(filterPageUrlPk != null && filterPageUrlPk !== '')
-			filters.push({ name: 'fq', value: 'pageUrlPk:' + filterPageUrlPk });
-
 		var filterTrafficStopKey = $formFilters.find('.valueTrafficStopKey').val();
 		if(filterTrafficStopKey != null && filterTrafficStopKey !== '')
 			filters.push({ name: 'fq', value: 'trafficStopKey:' + filterTrafficStopKey });
+
+		var filterStateAbbreviation = $formFilters.find('.valueStateAbbreviation').val();
+		if(filterStateAbbreviation != null && filterStateAbbreviation !== '')
+			filters.push({ name: 'fq', value: 'stateAbbreviation:' + filterStateAbbreviation });
+
+		var filterStateKey = $formFilters.find('.valueStateKey').val();
+		if(filterStateKey != null && filterStateKey !== '')
+			filters.push({ name: 'fq', value: 'stateKey:' + filterStateKey });
+
+		var filterStateName = $formFilters.find('.valueStateName').val();
+		if(filterStateName != null && filterStateName !== '')
+			filters.push({ name: 'fq', value: 'stateName:' + filterStateName });
 
 		var filterAgencyKey = $formFilters.find('.valueAgencyKey').val();
 		if(filterAgencyKey != null && filterAgencyKey !== '')
@@ -1463,10 +1310,6 @@ function adminsearchTrafficStopFilters($formFilters) {
 		var filterTrafficSearchRaceTitles = $formFilters.find('.valueTrafficSearchRaceTitles').val();
 		if(filterTrafficSearchRaceTitles != null && filterTrafficSearchRaceTitles !== '')
 			filters.push({ name: 'fq', value: 'trafficSearchRaceTitles:' + filterTrafficSearchRaceTitles });
-
-		var filterTrafficStopCompleteName = $formFilters.find('.valueTrafficStopCompleteName').val();
-		if(filterTrafficStopCompleteName != null && filterTrafficStopCompleteName !== '')
-			filters.push({ name: 'fq', value: 'trafficStopCompleteName:' + filterTrafficStopCompleteName });
 	}
 	return filters;
 }
@@ -1482,31 +1325,13 @@ function adminsearchTrafficStopVals(filters, success, error) {
 	});
 }
 
-function suggestTrafficStopObjectSuggest($formFilters, $list) {
-	success = function( data, textStatus, jQxhr ) {
-		$list.empty();
-		$.each(data['list'], function(i, o) {
-			var $i = $('<i>').attr('class', 'far fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficStopCompleteName']);
-			var $li = $('<li>');
-			var $a = $('<a>').attr('href', o['pageUrlPk']);
-			$a.append($i);
-			$a.append($span);
-			$li.append($a);
-			$list.append($li);
-		});
-	};
-	error = function( jqXhr, textStatus, errorThrown ) {};
-	searchTrafficStopVals($formFilters, success, error);
-}
-
 function suggestTrafficStopPersonKeys(filters, $list, pk = null, attribute=true) {
 	success = function( data, textStatus, jQxhr ) {
 		$list.empty();
 		$.each(data['list'], function(i, o) {
 			var $i = $('<i>').attr('class', 'fa fa-newspaper ');
-			var $span = $('<span>').attr('class', '').text(o['trafficPersonCompleteName']);
-			var $a = $('<a>').attr('id', o['pk']).attr('href', o['pageUrlPk']);
+			var $span = $('<span>').attr('class', '').text(o['objectTitle']);
+			var $a = $('<span>');
 			$a.append($i);
 			$a.append($span);
 			var val = o['trafficStopKey'];
@@ -1549,12 +1374,12 @@ async function websocketTrafficStop(success) {
 			var numFound = parseInt(json['numFound']);
 			var numPATCH = parseInt(json['numPATCH']);
 			var percent = Math.floor( numPATCH / numFound * 100 ) + '%';
-			var $box = $('<div>').attr('class', 'w3-display-topright w3-quarter box-' + id + ' ').attr('id', 'box-' + id).attr('data-numPATCH', numPATCH);
+			var $box = $('<div>').attr('class', 'w3-quarter box-' + id + ' ').attr('id', 'box-' + id).attr('data-numPATCH', numPATCH);
 			var $margin = $('<div>').attr('class', 'w3-margin ').attr('id', 'margin-' + id);
 			var $card = $('<div>').attr('class', 'w3-card w3-white ').attr('id', 'card-' + id);
 			var $header = $('<div>').attr('class', 'w3-container fa-pale-green ').attr('id', 'header-' + id);
 			var $i = $('<i>').attr('class', 'far fa-newspaper w3-margin-right ').attr('id', 'icon-' + id);
-			var $headerSpan = $('<span>').attr('class', '').text('modify traffic stops');
+			var $headerSpan = $('<span>').attr('class', '').text('modify traffic stops' + id);
 			var $x = $('<span>').attr('class', 'w3-button w3-display-topright ').attr('onclick', '$("#card-' + id + '").hide(); ').attr('id', 'x-' + id);
 			var $body = $('<div>').attr('class', 'w3-container w3-padding ').attr('id', 'text-' + id);
 			var $bar = $('<div>').attr('class', 'w3-light-gray ').attr('id', 'bar-' + id);
@@ -1573,8 +1398,7 @@ async function websocketTrafficStop(success) {
 				if(!$old_box.size()) {
 					$('.top-box').append($box);
 				} else if($old_box && $old_box.attr('data-numPATCH') < numFound) {
-					$('.box-' + id).remove();
-					$('.top-box').append($box);
+					$('.box-' + id).html($margin);
 				}
 			} else {
 				$('.box-' + id).remove();
@@ -1646,41 +1470,17 @@ async function websocketTrafficStopInner(apiRequest) {
 				});
 				addGlow($('.inputTrafficStop' + pk + 'Modified'));
 			}
-			var val = o['archived'];
-			if(vars.includes('archived')) {
-				$('.inputTrafficStop' + pk + 'Archived').each(function() {
+			var val = o['agencyTitle'];
+			if(vars.includes('agencyTitle')) {
+				$('.inputTrafficStop' + pk + 'AgencyTitle').each(function() {
 					if(val !== $(this).val())
 						$(this).val(val);
 				});
-				$('.varTrafficStop' + pk + 'Archived').each(function() {
+				$('.varTrafficStop' + pk + 'AgencyTitle').each(function() {
 					if(val !== $(this).text())
 						$(this).text(val);
 				});
-				addGlow($('.inputTrafficStop' + pk + 'Archived'));
-			}
-			var val = o['deleted'];
-			if(vars.includes('deleted')) {
-				$('.inputTrafficStop' + pk + 'Deleted').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'Deleted').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'Deleted'));
-			}
-			var val = o['stopAgencyTitle'];
-			if(vars.includes('stopAgencyTitle')) {
-				$('.inputTrafficStop' + pk + 'StopAgencyTitle').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'StopAgencyTitle').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'StopAgencyTitle'));
+				addGlow($('.inputTrafficStop' + pk + 'AgencyTitle'));
 			}
 			var val = o['stopDateTime'];
 			if(vars.includes('stopDateTime')) {
@@ -1874,18 +1674,6 @@ async function websocketTrafficStopInner(apiRequest) {
 				});
 				addGlow($('.inputTrafficStop' + pk + 'Id'));
 			}
-			var val = o['modifiedIsoOffsetDateTime'];
-			if(vars.includes('modifiedIsoOffsetDateTime')) {
-				$('.inputTrafficStop' + pk + 'ModifiedIsoOffsetDateTime').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'ModifiedIsoOffsetDateTime').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'ModifiedIsoOffsetDateTime'));
-			}
 			var val = o['classCanonicalName'];
 			if(vars.includes('classCanonicalName')) {
 				$('.inputTrafficStop' + pk + 'ClassCanonicalName').each(function() {
@@ -1921,30 +1709,6 @@ async function websocketTrafficStopInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputTrafficStop' + pk + 'ClassCanonicalNames'));
-			}
-			var val = o['sessionId'];
-			if(vars.includes('sessionId')) {
-				$('.inputTrafficStop' + pk + 'SessionId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'SessionId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'SessionId'));
-			}
-			var val = o['userKey'];
-			if(vars.includes('userKey')) {
-				$('.inputTrafficStop' + pk + 'UserKey').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'UserKey').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'UserKey'));
 			}
 			var val = o['saves'];
 			if(vars.includes('saves')) {
@@ -1982,54 +1746,6 @@ async function websocketTrafficStopInner(apiRequest) {
 				});
 				addGlow($('.inputTrafficStop' + pk + 'ObjectId'));
 			}
-			var val = o['objectSuggest'];
-			if(vars.includes('objectSuggest')) {
-				$('.inputTrafficStop' + pk + 'ObjectSuggest').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'ObjectSuggest').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'ObjectSuggest'));
-			}
-			var val = o['objectText'];
-			if(vars.includes('objectText')) {
-				$('.inputTrafficStop' + pk + 'ObjectText').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'ObjectText').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'ObjectText'));
-			}
-			var val = o['pageUrlId'];
-			if(vars.includes('pageUrlId')) {
-				$('.inputTrafficStop' + pk + 'PageUrlId').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'PageUrlId').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'PageUrlId'));
-			}
-			var val = o['pageUrlPk'];
-			if(vars.includes('pageUrlPk')) {
-				$('.inputTrafficStop' + pk + 'PageUrlPk').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'PageUrlPk').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'PageUrlPk'));
-			}
 			var val = o['trafficStopKey'];
 			if(vars.includes('trafficStopKey')) {
 				$('.inputTrafficStop' + pk + 'TrafficStopKey').each(function() {
@@ -2041,6 +1757,42 @@ async function websocketTrafficStopInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputTrafficStop' + pk + 'TrafficStopKey'));
+			}
+			var val = o['stateAbbreviation'];
+			if(vars.includes('stateAbbreviation')) {
+				$('.inputTrafficStop' + pk + 'StateAbbreviation').each(function() {
+					if(val !== $(this).val())
+						$(this).val(val);
+				});
+				$('.varTrafficStop' + pk + 'StateAbbreviation').each(function() {
+					if(val !== $(this).text())
+						$(this).text(val);
+				});
+				addGlow($('.inputTrafficStop' + pk + 'StateAbbreviation'));
+			}
+			var val = o['stateKey'];
+			if(vars.includes('stateKey')) {
+				$('.inputTrafficStop' + pk + 'StateKey').each(function() {
+					if(val !== $(this).val())
+						$(this).val(val);
+				});
+				$('.varTrafficStop' + pk + 'StateKey').each(function() {
+					if(val !== $(this).text())
+						$(this).text(val);
+				});
+				addGlow($('.inputTrafficStop' + pk + 'StateKey'));
+			}
+			var val = o['stateName'];
+			if(vars.includes('stateName')) {
+				$('.inputTrafficStop' + pk + 'StateName').each(function() {
+					if(val !== $(this).val())
+						$(this).val(val);
+				});
+				$('.varTrafficStop' + pk + 'StateName').each(function() {
+					if(val !== $(this).text())
+						$(this).text(val);
+				});
+				addGlow($('.inputTrafficStop' + pk + 'StateName'));
 			}
 			var val = o['agencyKey'];
 			if(vars.includes('agencyKey')) {
@@ -2113,18 +1865,6 @@ async function websocketTrafficStopInner(apiRequest) {
 						$(this).text(val);
 				});
 				addGlow($('.inputTrafficStop' + pk + 'TrafficSearchRaceTitles'));
-			}
-			var val = o['trafficStopCompleteName'];
-			if(vars.includes('trafficStopCompleteName')) {
-				$('.inputTrafficStop' + pk + 'TrafficStopCompleteName').each(function() {
-					if(val !== $(this).val())
-						$(this).val(val);
-				});
-				$('.varTrafficStop' + pk + 'TrafficStopCompleteName').each(function() {
-					if(val !== $(this).text())
-						$(this).text(val);
-				});
-				addGlow($('.inputTrafficStop' + pk + 'TrafficStopCompleteName'));
 			}
 		});
 	}

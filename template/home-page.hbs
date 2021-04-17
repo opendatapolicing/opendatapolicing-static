@@ -1,0 +1,117 @@
+
+{{#partial "head_content"}}
+		<title>Open Data Policing</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="keywords" content="">
+		<link rel="stylesheet" href="{{staticBaseUrl}}/css/w3.css" />
+		<link rel="stylesheet" href="{{staticBaseUrl}}/css/site-enUS.css" />
+		<script src="https://kit.fontawesome.com/59d19567d5.js"></script>
+		<script src="{{staticBaseUrl}}/js/jquery-1.12.4.min.js"></script>
+		<script src="{{staticBaseUrl}}/js/moment.min.js"></script>
+		<script src="{{staticBaseUrl}}/js/jqDatePicker.js"></script>
+		<script src="{{staticBaseUrl}}/js/site-enUS.js"></script>
+		<script>
+		$(document).ready(function() {
+			Handlebars.registerHelper('json', function (content) {
+			    return JSON.stringify(content);
+			});
+			$.ajax({
+				url: '/api/state?fl=pk,stateName,stateAbbreviation'
+				, dataType: 'json'
+				, type: 'GET'
+				, contentType: 'application/json; charset=utf-8'
+				, success: function(data) {
+					data.list.forEach(function(state) {
+						state['staticBaseUrl'] = '{{{staticBaseUrl}}}';
+						$('#state-list').append(Handlebars.templates['home-page-state'](state));
+					})
+				}
+			});
+		});
+		</script>
+{{/partial}}
+
+{{#partial "body_content"}}
+</head>
+<body style="height: 100%;">
+	<div id='wrap'>
+
+		<div class="w3-top w3-2017-navy-peony ">
+			<div class="w3-bar w3-content ">
+				<div class="w3-dropdown-hover w3-hide-medium w3-hide-large ">
+					<button class="w3-button ">
+						<i class="fas fa-bars"></i>
+					</button>
+					<div class="w3-dropdown-content w3-bar-block w3-card-4 ">
+						<a class="w3-bar-item w3-button " href="/about">About</a>
+					</div>
+				</div>
+				<a class="w3-bar-item w3-button font-weight-bold " href="/">Open Data Policing</a>
+				<a class="w3-bar-item w3-hide-small " href="/about">About</a>
+			</div>
+		</div>
+
+		<div class="w3-2017-navy-peony w3-padding-64 ">
+			<div class="w3-content w3-center ">
+				<div class="row">
+					<h1 class='title'>Open Data Policing</h1>
+					<p class='tagline'>Search all known North Carolina, Maryland, and Illinois traffic stops</p>
+				</div>
+				<div id="state-list" class="w3-row">
+				</div>
+			</div>
+		</div>
+
+		<div class="state-featurette">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<blockquote>
+							<p>“This platform presents the information in a manner that
+								increases the transparency of the Fayetteville Police Department
+								and improves the community and police relationship.”</p>
+							<footer>Harold Medlock, Fayetteville Police Chief</footer>
+						</blockquote>
+					</div>
+				</div>
+				<hr class="half-rule">
+				<div class="row">
+					<div class="col-sm-4">
+						<h3>Locate an Officer's Career Stop and Search History</h3>
+						<p class="justify">Stopped by the police? Use our “Find a
+							Stop” feature to locate your traffic stop. Click on the
+							associated Officer ID number to display the enforcement history
+							of the officer who stopped you. Maryland data includes an
+							officer’s stop, search, and contraband seizure data, broken down
+							by race and ethnicity. North Carolina data includes these
+							features in addition to use-of-force data (traffic stops only).</p>
+					</div>
+					<div class="col-sm-4">
+						<h3>Review Departmental Enforcement Patterns</h3>
+						<p class="justify">Learn more about the enforcement patterns
+							of individual police agencies. Metrics include stops, searches,
+							search rates, contraband seizure rates, and the likelihood of
+							search for individual stop causes—each broken down by race and
+							ethnicity. Click on the “Agencies” tab to review who is stopped
+							and searched in a given jurisdiction and how enforcement patterns
+							compare to local demographics, displayed through the most
+							recently available census data.</p>
+					</div>
+					<div class="col-sm-4">
+						<h3>Compare Enforcement Practices Among Officers and
+							Jurisdictions</h3>
+						<p class="justify">Our platform allows users—including those
+							in police management—to easily compare enforcement patterns among
+							individual officers and agencies, evaluate the frequency and
+							efficiency of searches, and monitor for racially disparate
+							enforcement practices. Police managers who possess a master list
+							of Officer ID codes can bypass the “Find a Stop” page to directly
+							access data on individual officers under their command.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+{{/partial}}
+{{> base-page}}
+
