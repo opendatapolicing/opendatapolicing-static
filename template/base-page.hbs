@@ -4,13 +4,26 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+		<link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
+		<link rel="stylesheet" href="{{staticBaseUrl}}/css/w3.css" />
+		<link rel="stylesheet" href="{{staticBaseUrl}}/css/jquery-ui.css">
+
+		<script src="https://kit.fontawesome.com/59d19567d5.js"></script>
+		<script src="{{staticBaseUrl}}/js/jquery-1.12.4.min.js"></script>
+		<script defer="defer" src="{{staticBaseUrl}}/js/jquery-ui.js"></script>
+		<script src="{{staticBaseUrl}}/js/site-enUS.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 		<script src="{{staticBaseUrl}}/js/helpers.js"></script>
 
 {{#block "head_content"}}
 {{/block}}
+
+		<link rel="stylesheet" href="{{staticBaseUrl}}/css/site-enUS.css" />
 	</head>
-	<body style="height: 100%;">
+	<body style="height: 100%; font-family: 'Droid Sans', sans-serif; ">
+		<a name="top"></a>
+		<div class="top-box w3-top w3-padding-32 ">
+		</div>
 		<div class="w3-top w3-2017-navy-peony ">
 			<div class="w3-bar w3-content ">
 				<div class="w3-dropdown-hover w3-hide-medium w3-hide-large ">
@@ -28,12 +41,12 @@
 {{#block "body_content"}}
 {{/block}}
 
-		<div class="about-footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-6 justify">
-						<h3>About Open Data Policing</h3>
-						<p>
+		<div class="w3-light-gray w3-padding-16 ">
+			<div class="w3-content ">
+				<div class="w3-row ">
+					<div class="w3-half w3-mobile w3-container ">
+						<h3 class="w3-text-2017-navy-peony ">About Open Data Policing</h3>
+						<p class="">
 							Open Data Policing is a first-of-its-kind platform that aims to
 							make real the recommendation of the President’s Task Force on
 							21st Century Policing to make stop, search, and use-of-force
@@ -55,35 +68,35 @@
 						</p>
 
 					</div>
-					<div class="col-sm-3 justify">
-						<h3>Donate</h3>
-						<p>Open Data Policing is a project of the Southern Coalition
-							for Social Justice. To support the work of the Open Data Policing
-							initiative, click here.
-						<ul class="links list-unstyled">
-							<li><a
-								href="https://www.southerncoalition.org/donate-bloomerang/">Donate</a></li>
-						</ul>
-						</p>
+					<div class="w3-quarter w3-mobile w3-container ">
+						<h3 class="w3-text-2017-navy-peony ">Donate</h3>
+						<div class="">
+							<p>Open Data Policing is a project of the Southern Coalition
+								for Social Justice. To support the work of the Open Data Policing
+								initiative, click here.
+							<ul class="links list-unstyled">
+								<li><a class="w3-text-2017-navy-peony " href="https://www.southerncoalition.org/donate-bloomerang/">Donate</a></li>
+							</ul>
+							</p>
+						</div>
 					</div>
-					<div class="col-sm-3">
-						<h3>Connect</h3>
-						<ul class="links list-unstyled">
-							<li><a href="http://www.southerncoalition.org/contact-us/">Contact
+					<div class="w3-quarter w3-mobile w3-container ">
+						<h3 class="w3-text-2017-navy-peony ">Connect</h3>
+						<ul class="">
+							<li><a class="w3-text-2017-navy-peony " href="http://www.southerncoalition.org/contact-us/">Contact
 									Us</a></li>
-							<li><a href="http://twitter.com/scsj">Twitter</a></li>
-							<li><a href="http://facebook.com/southerncoalition">Facebook</a></li>
+							<li><a class="w3-text-2017-navy-peony " href="http://twitter.com/scsj">Twitter</a></li>
+							<li><a class="w3-text-2017-navy-peony " href="http://facebook.com/southerncoalition">Facebook</a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="affix-offset-bottom" id="footer">
+		<div class="w3-small w3-center " id="footer">
 			<div class="container">
 				<p class="small credit">
-					Open Data Policing - <a href='http://www.southerncoalition.org/'>Southern
-						Coalition for Social Justice</a> - <a href="/admin/">Admin</a>
+					Open Data Policing - <a class="w3-text-2017-navy-peony " href='http://www.southerncoalition.org/'>Southern Coalition for Social Justice</a>
 				</p>
 			</div>
 		</div>

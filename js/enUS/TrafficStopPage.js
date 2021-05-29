@@ -127,10 +127,6 @@ async function putcopyTrafficStop($formValues, pk, success, error) {
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
 
-	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
-	if(valueTrafficStopKey != null && valueTrafficStopKey !== '')
-		vals['trafficStopKey'] = valueTrafficStopKey;
-
 	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
 	if(valueStateAbbreviation != null && valueStateAbbreviation !== '')
 		vals['stateAbbreviation'] = valueStateAbbreviation;
@@ -259,10 +255,6 @@ async function postTrafficStop($formValues, success, error) {
 	var valueObjectTitle = $formValues.find('.valueObjectTitle').val();
 	if(valueObjectTitle != null && valueObjectTitle !== '')
 		vals['objectTitle'] = valueObjectTitle;
-
-	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
-	if(valueTrafficStopKey != null && valueTrafficStopKey !== '')
-		vals['trafficStopKey'] = valueTrafficStopKey;
 
 	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
 	if(valueStateAbbreviation != null && valueStateAbbreviation !== '')
@@ -569,18 +561,6 @@ async function patchTrafficStop($formFilters, $formValues, pk, success, error) {
 	var removeObjectTitle = $formValues.find('.removeObjectTitle').val();
 	if(removeObjectTitle != null && removeObjectTitle !== '')
 		vals['removeObjectTitle'] = removeObjectTitle;
-
-	var valueTrafficStopKey = $formValues.find('.valueTrafficStopKey').val();
-	var removeTrafficStopKey = $formValues.find('.removeTrafficStopKey').val() === 'true';
-	var setTrafficStopKey = removeTrafficStopKey ? null : $formValues.find('.setTrafficStopKey').val();
-	var addTrafficStopKey = $formValues.find('.addTrafficStopKey').val();
-	if(removeTrafficStopKey || setTrafficStopKey != null && setTrafficStopKey !== '')
-		vals['setTrafficStopKey'] = setTrafficStopKey;
-	if(addTrafficStopKey != null && addTrafficStopKey !== '')
-		vals['addTrafficStopKey'] = addTrafficStopKey;
-	var removeTrafficStopKey = $formValues.find('.removeTrafficStopKey').val();
-	if(removeTrafficStopKey != null && removeTrafficStopKey !== '')
-		vals['removeTrafficStopKey'] = removeTrafficStopKey;
 
 	var valueStateAbbreviation = $formValues.find('.valueStateAbbreviation').val();
 	var removeStateAbbreviation = $formValues.find('.removeStateAbbreviation').val() === 'true';
