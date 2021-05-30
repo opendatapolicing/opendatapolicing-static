@@ -141,20 +141,40 @@ function svgStopCountPercent(year) {
 			;
 	$.get(url, function( searchData ) {
 		var graphData = [];
+		var $theadRow = $('#theadRowStopCountPercent');
+		var $tbody = $('#tbodyStopCountPercent');
+		$theadRow.empty();
+		$theadRow.append('<th>Year</th>')
+		var yearRows = {}
+		$totalRow = $('<tr><td>Total</td></tr>');
 		for (i = 0; i < searchData.facet_pivot.personRaceTitles.length; i++) {
 			var pivotData = searchData.facet_pivot.personRaceTitles[i];
 			var itemValues = [];
 			var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(pivotData.value) };
 			var countKeys = Object.keys(pivotData.ranges.stopDateTime.counts);
+
+			$theadRow.append('<th>' + pivotData.value + '</th>')
+
 			countKeys.forEach(function(countKey) {
 				var a = pivotData.ranges.stopDateTime.counts[countKey];
 				var b = searchData.facet_ranges.stopDateTime.counts[countKey];
 				var c = b == 0 ? 0 : (a / b);
-				var itemRangeValues = { x: parseInt(countKey.substr(0, countKey.indexOf('-'))), y: c, series: i }
+				var year = countKey.substr(0, countKey.indexOf('-'));
+				var itemRangeValues = { x: parseInt(year), y: c, series: i }
 				itemValues.push(itemRangeValues);
+
+				var $yearRow = yearRows[year];
+				if(!$yearRow) {
+					$yearRow = $('<tr><td>' + year + '</td></tr>');
+					$tbody.append($yearRow);
+					yearRows[year] = $yearRow;
+				}
+				$yearRow.append('<td>' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>')
 			});
+			$totalRow.append('<td>' + pivotData.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>')
 			graphData.push(itemData);
 		}
+		$tbody.append($totalRow);
 
 		nv.addGraph(function() {
 			var chart = nv.models.lineChart()
@@ -166,7 +186,7 @@ function svgStopCountPercent(year) {
 				.showXAxis(true)
 				.forceY([0, 1])
 				.color(function(d){ 
-					return d.data.color;
+					return d.color;
 				})
 				;
 
@@ -484,7 +504,7 @@ function svgCauseLikelihoodPercent(year) {
 						var currentSearchRangeData = currentSearchPivotData.pivot[j];
 						var whiteSearchRangeData = whiteSearchPivotData.pivot.find(x => x.value === currentSearchRangeData.value);
 						var currentStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === currentSearchPivotData.value);
-						if(currentStopPivotData) {
+						if(currentStopPivotData && currentStopPivotData.pivot) {
 							var a = currentSearchRangeData.count;
 							var b = currentStopPivotData.pivot.find(x => x.value === currentSearchRangeData.value).count;
 							var c = b == 0 ? 0 : (a / b);
@@ -546,110 +566,101 @@ svgCauseLikelihoodPercent();
 		</script>
 
 {{/partial}} {{#partial "body_content"}}
-		<div class="w3-content ">
-			<div>
-				<svg id="svgCensusCountPie" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<h2>Traffic Stops</h2>
-			<h3>Traffic Stops (percentage by race/ethnic composition)</h3>
-			<p>These graphs reflect the race/ethnic composition of drivers stopped by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
-			<div class="w3-row ">
-				<div class="w3-third ">
-					<div>
-						<svg id="svgStopCountPie" style="width: 300px; height: 400px; "></svg>
-					</div>
-					<div>
-						<select id="selectStopCountPie" onchange="svgStopCountPie(this.value)"></select>
-					</div>
-					<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
-					<p class="font-style-italic ">* Non-hispanic</p>
-				</div>
-				<div class="w3-twothird ">
-					<h3>Longitudinal view of annual traffic stops</h3>
-					<div id="tabsStopCountPercent">
-						<ul>
-							<li><a href="#tabsStopCountPercent-1">Chart</a></li>
-							<li><a href="#tabsStopCountPercent-2">Data</a></li>
-						</ul>
-						<div id="tabsStopCountPercent-1">
-							<div>
-								<svg id="svgStopCountPercent" style="width: 600px; height: 400px; "></svg>
-							</div>
-							<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
-							<p class="font-style-italic ">* Non-hispanic</p>
-						</div>
-						<div id="tabsStopCountPercent-2">
-							<table>
-								<thead>
-									<tr>
-										<th>Year</th>
-										<th>White*</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>Year</td>
-										<td>White*</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<h3>Departmental Stop Count</h3>
-			<p>This graph displays the number of traffic stops broken down by stop purpose and ethnicity. Adjusting the drop down menu will display the individual stop counts relative to ethnic groups on a year-by-year basis. </p>
-			<div>
-				<svg id="svgStopCountTotal" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<p class="font-style-italic ">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>
-			<h3>Departmental Search Count</h3>
-			<p>This graph displays the number of searches broken down by search type and ethnicity. Adjusting the drop down menu will display the individual search counts relative to ethnic groups on a year-by-year basis. </p>
-			<div>
-				<svg id="svgSearchCountTotal" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<p class="font-style-italic ">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>
-			<h2>Departmental Search Rate</h2>
-			<h3>Average Departmental Search Rate For Vehicle Stops</h3>
-			<p>This graph is a longitudinal representation of the average departmental search rate for vehicle stops since the department began reporting its data to the state. The black line represents the overall search rate for all motorists. </p>
-			<div>
-				<svg id="svgSearchRatePercentOfStops" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<p>Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual stop/search counts from the NC Department of Justice. </p>
-			<p>* Non-hispanic</p>
-			<h3>Search Data by Race/Ethnic Composition</h3>
-			<p>These graphs reflect the race/ethnic composition of drivers searched by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
-			<div>
-				<svg id="svgSearchRatePie" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
-			<p class="font-style-italic ">* Non-hispanic</p>
-			<h3>Longitudinal view of annual percent of search by race/ethnic composition</h3>
-			<div>
-				<svg id="svgSearchRatePercentTotal" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
-			<p class="font-style-italic ">* Non-hispanic</p>
-			<div>
-				<svg id="svgCauseLikelihoodPercent" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<div>
-				<svg id="svgContrabandHitRate" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<div>
-				<svg id="svgUseOfForcePie" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<div>
-				<svg id="svgUseOfForceTotal" style="width: 600px; height: 400px; "></svg>
-			</div>
-			<footer class="w3-center w3-black w3-text-white w3-padding-24 ">
+		<div class="w3-light-gray ">
+			<div class="w3-content w3-padding ">
 				<div>
-					<a href="https://github.com/Southern-Coalition-Team-19/southerncoalition" class="w3-small ">This site is open source.</a>
-					<a href="https://www.openshift.com/products/online/"><span class="w3-small ">Powered by </span><img alt="" class="w3-image " style="display: inline-block; width: 100px; margin: 0 10px;" src="{{staticBaseUrl}}/svg/openshift.svg"/></a>
+					<svg id="svgCensusCountPie" style="width: 600px; height: 400px; "></svg>
 				</div>
-			</footer>
+				<h2 class="w3-text-2017-navy-peony ">Traffic Stops</h2>
+				<h3 class="w3-text-2017-navy-peony ">Traffic Stops (percentage by race/ethnic composition)</h3>
+				<p>These graphs reflect the race/ethnic composition of drivers stopped by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
+				<div class="w3-row ">
+					<div class="w3-third ">
+						<div>
+							<svg id="svgStopCountPie" style="width: 300px; height: 400px; "></svg>
+						</div>
+						<div>
+							<select id="selectStopCountPie" onchange="svgStopCountPie(this.value)"></select>
+						</div>
+						<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
+					</div>
+					<div class="w3-twothird ">
+						<h3 class="w3-text-2017-navy-peony ">Longitudinal view of annual traffic stops</h3>
+						<div id="tabsStopCountPercent">
+							<ul>
+								<li><a href="#tabsStopCountPercent-1">Chart</a></li>
+								<li><a href="#tabsStopCountPercent-2">Data</a></li>
+							</ul>
+							<div id="tabsStopCountPercent-1">
+								<div>
+									<svg id="svgStopCountPercent" style="width: 600px; height: 400px; "></svg>
+								</div>
+								<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+							</div>
+							<div id="tabsStopCountPercent-2">
+								<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+									<thead id="theadStopCountPercent" class="font-weight-bold ">
+										<tr id="theadRowStopCountPercent">
+										</tr>
+									</thead>
+									<tbody id="tbodyStopCountPercent">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+	
+				<h3 class="w3-text-2017-navy-peony ">Departmental Stop Count</h3>
+				<p>This graph displays the number of traffic stops broken down by stop purpose and ethnicity. Adjusting the drop down menu will display the individual stop counts relative to ethnic groups on a year-by-year basis. </p>
+				<div>
+					<svg id="svgStopCountTotal" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<p class="font-style-italic ">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>
+				<h3 class="w3-text-2017-navy-peony ">Departmental Search Count</h3>
+				<p>This graph displays the number of searches broken down by search type and ethnicity. Adjusting the drop down menu will display the individual search counts relative to ethnic groups on a year-by-year basis. </p>
+				<div>
+					<svg id="svgSearchCountTotal" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<p class="font-style-italic ">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>
+				<h2 class="w3-text-2017-navy-peony ">Departmental Search Rate</h2>
+				<h3 class="w3-text-2017-navy-peony ">Average Departmental Search Rate For Vehicle Stops</h3>
+				<p>This graph is a longitudinal representation of the average departmental search rate for vehicle stops since the department began reporting its data to the state. The black line represents the overall search rate for all motorists. </p>
+				<div>
+					<svg id="svgSearchRatePercentOfStops" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<p>Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual stop/search counts from the NC Department of Justice. </p>
+				<h3 class="w3-text-2017-navy-peony ">Search Data by Race/Ethnic Composition</h3>
+				<p>These graphs reflect the race/ethnic composition of drivers searched by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
+				<div>
+					<svg id="svgSearchRatePie" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
+				<h3 class="w3-text-2017-navy-peony ">Longitudinal view of annual percent of search by race/ethnic composition</h3>
+				<div>
+					<svg id="svgSearchRatePercentTotal" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+				<div>
+					<svg id="svgCauseLikelihoodPercent" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<div>
+					<svg id="svgContrabandHitRate" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<div>
+					<svg id="svgUseOfForcePie" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<div>
+					<svg id="svgUseOfForceTotal" style="width: 600px; height: 400px; "></svg>
+				</div>
+				<footer class="w3-center w3-black w3-text-white w3-padding-24 ">
+					<div>
+						<a href="https://github.com/Southern-Coalition-Team-19/southerncoalition" class="w3-small ">This site is open source.</a>
+						<a href="https://www.openshift.com/products/online/"><span class="w3-small ">Powered by </span><img alt="" class="w3-image " style="display: inline-block; width: 100px; margin: 0 10px;" src="{{staticBaseUrl}}/svg/openshift.svg"/></a>
+					</div>
+				</footer>
+			</div>
 		</div>
 {{/partial}}
 {{> base-page}}
