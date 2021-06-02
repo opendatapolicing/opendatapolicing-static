@@ -211,7 +211,7 @@ function svgStopCountPercent(year) {
 svgStopCountPercent();
 
 function svgStopCountTotal(stopPurposeTitle) {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=1999-12-30T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
 			+ (stopPurposeTitle ? ("&fq=stopPurposeTitle:" + stopPurposeTitle) : "")
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -302,23 +302,60 @@ function svgStopCountTotal(stopPurposeTitle) {
 svgStopCountTotal();
 
 function svgSearchCountTotal(searchTypeTitle) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=1999-12-30T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
 			+ (searchTypeTitle ? ("&fq=searchTypeTitle:" + searchTypeTitle) : "")
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
 	$.get(url, function( searchData ) {
 		var graphData = [];
-		for (i = 0; i < searchData.facet_pivot.personRaceTitle.length; i++) {
-			var pivotData = searchData.facet_pivot.personRaceTitle[i];
+		var $theadRow = $('#theadRowSearchCountTotal');
+		var $tbody = $('#tbodySearchCountTotal');
+		$theadRow.empty();
+		$theadRow.append('<th>Year</th>')
+		$theadRow.append('<th>Stop Purpose</th>')
+		var yearRows = {}
+		var totalRows = {}
+		for (i = 0; i < searchData.facet_pivot['personRaceTitle,searchTypeTitle'].length; i++) {
+			var pivotData = searchData.facet_pivot['personRaceTitle,searchTypeTitle'][i];
 			var itemValues = [];
 			var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(pivotData.value) };
-			Object.keys(pivotData.ranges.stopDateTime.counts).forEach(function(stopDateTimeKey) {
-				var a = pivotData.ranges.stopDateTime.counts[stopDateTimeKey];
-				var b = searchData.facet_ranges.stopDateTime.counts[stopDateTimeKey];
+			var countKeys = Object.keys(pivotData.ranges.stopDateTime.counts);
+
+			$theadRow.append('<th>' + pivotData.value + '</th>')
+
+			countKeys.forEach(function(countKey) {
+				var a = pivotData.ranges.stopDateTime.counts[countKey];
+				var b = searchData.facet_ranges.stopDateTime.counts[countKey];
 				var c = a;
-				var itemRangeValues = { x: parseInt(stopDateTimeKey.substr(0, stopDateTimeKey.indexOf('-'))), y: c, series: i }
+				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				var itemRangeValues = { x: year, y: c, series: i }
 				itemValues.push(itemRangeValues);
+			});
+
+			pivotData.pivot.forEach(function(pivotData2) {
+				var countKeys2 = Object.keys(pivotData2.ranges.stopDateTime.counts);
+				var stopPurposeTitle = pivotData2.value;
+				countKeys2.forEach(function(countKey) {
+					var a = pivotData2.ranges.stopDateTime.counts[countKey];
+					var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+					var $yearRow = yearRows[year + '-' + stopPurposeTitle];
+					if(!$yearRow) {
+						$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+						$tbody.append($yearRow);
+						yearRows[year + '-' + stopPurposeTitle] = $yearRow;
+					}
+					$yearRow.append('<td>' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				});
+				var $totalRow = totalRows[stopPurposeTitle];
+				if(!$totalRow) {
+					$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
+					totalRows[stopPurposeTitle] = $totalRow;
+				}
+				$totalRow.append('<td>' + pivotData2.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+			});
+			Object.keys(totalRows).forEach(function(key) {
+				$tbody.append(totalRows[key]);
 			});
 			graphData.push(itemData);
 		}
@@ -356,58 +393,91 @@ function svgSearchCountTotal(searchTypeTitle) {
 svgSearchCountTotal();
 
 function svgSearchRatePercentOfStops(year) {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,trafficSearchRaceTitles"
+	var stopUrl = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
 			+ (year ? ("&fq=stopYear:" + year) : "")
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
-	$.get(url, function( searchData ) {
-		var graphData = [];
-		for (i = 0; i < searchData.facet_pivot['personRaceTitles,trafficSearchRaceTitles'].length; i++) {
-			var pivotData = searchData.facet_pivot['personRaceTitles,trafficSearchRaceTitles'][i];
-			var itemValues = [];
-			var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(pivotData.value) };
-			Object.keys(pivotData.ranges.stopDateTime.counts).forEach(function(stopDateTimeKey) {
-				var a = 0;
-				if(pivotData.pivot) {
-					var trafficSearchRaceTitleData = pivotData.pivot.find(x => x.value === pivotData.value);
-					if(trafficSearchRaceTitleData)
-						a = trafficSearchRaceTitleData.count;
+	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
+			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+			;
+	$.get(stopUrl, function( stopData ) {
+		$.get(searchUrl, function( searchData ) {
+			var graphData = [];
+			var $theadRow = $('#theadRowSearchRatePercentOfStops');
+			var $tbody = $('#tbodySearchRatePercentOfStops');
+			$theadRow.empty();
+			$theadRow.append('<th>Year</th>')
+			var yearRows = {}
+			for (i = 0; i < stopData.facet_pivot['personRaceTitles'].length; i++) {
+				var stopPivotData = stopData.facet_pivot['personRaceTitles'][i];
+				var searchPivotData = searchData.facet_pivot['personRaceTitle'][i];
+				var itemValues = [];
+				var itemData = { key: stopPivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(stopPivotData.value) };
+				var countKeys = Object.keys(stopPivotData.ranges.stopDateTime.counts);
+	
+				$theadRow.append('<th>' + stopPivotData.value + '</th>')
+	
+				countKeys.forEach(function(countKey) {
+					var a = 0;
+					var stopRaceTitleCount = stopPivotData.ranges.stopDateTime.counts[countKey];
+					var searchRaceTitleCount = searchPivotData.ranges.stopDateTime.counts[countKey];
+					if(stopRaceTitleCount && searchRaceTitleCount)
+						a = searchRaceTitleCount / stopRaceTitleCount;
+					var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+					var itemRangeValues = { x: year, y: a, series: i }
+					itemValues.push(itemRangeValues);
+
+					var $yearRow = yearRows[year];
+					if(!$yearRow) {
+						$yearRow = $('<tr><td>' + year + '</td></tr>');
+						$tbody.append($yearRow);
+						yearRows[year] = $yearRow;
+					}
+					$yearRow.append('<td>' + searchRaceTitleCount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + stopRaceTitleCount.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				});
+				graphData.push(itemData);
+			}
+			var rangeCountKeys = Object.keys(stopData.facet_ranges.stopDateTime.counts);
+			countKeys.forEach(function(countKey) {
+				var stopRangeCount = stopData.facet_ranges.stopDateTime.counts[countKey];
+				var searchRangeCount = searchData.facet_ranges.stopDateTime.counts[countKey];
+				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				var $yearRow = yearRows[year];
+				if($yearRow) {
+					$yearRow.append('<td>' + searchRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + stopRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 				}
-				var b = pivotData.ranges.stopDateTime.counts[stopDateTimeKey];
-				var c = b == 0 ? 0 : (a / b);
-				var itemRangeValues = { x: parseInt(stopDateTimeKey.substr(0, stopDateTimeKey.indexOf('-'))), y: c, series: i }
-				itemValues.push(itemRangeValues);
 			});
-			graphData.push(itemData);
-		}
-
-		nv.addGraph(function() {
-			var chart = nv.models.lineChart()
-				.margin({left: 100})
-				.useInteractiveGuideline(true)
-				.transitionDuration(350)
-				.showLegend(true)
-				.showYAxis(true)
-				.showXAxis(true)
-				.color(function(d){ return d.color;})
-				;
-
-			chart.xAxis
-				.axisLabel('Year')
-				.tickFormat(d3.format('.0d'))
-				;
-
-			chart.yAxis
-				.axisLabel('Percentage of stops by race')
-				.tickFormat(d3.format('%'));
-				;
-
-			d3.select('#svgSearchRatePercentOfStops')
-				.datum(graphData)
-				.call(chart);
-
-			return chart;
+			$theadRow.append('<th>Total</th>')
+	
+			nv.addGraph(function() {
+				var chart = nv.models.lineChart()
+					.margin({left: 100})
+					.useInteractiveGuideline(true)
+					.transitionDuration(350)
+					.showLegend(true)
+					.showYAxis(true)
+					.showXAxis(true)
+					.color(function(d){ return d.color;})
+					;
+	
+				chart.xAxis
+					.axisLabel('Year')
+					.tickFormat(d3.format('.0d'))
+					;
+	
+				chart.yAxis
+					.axisLabel('Percentage of stops by race')
+					.tickFormat(d3.format('%'));
+					;
+	
+				d3.select('#svgSearchRatePercentOfStops')
+					.datum(graphData)
+					.call(chart);
+	
+				return chart;
+			});
 		});
 	});
 }
@@ -471,11 +541,11 @@ function svgSearchRatePercentTotal(year) {
 			var pivotData = searchData.facet_pivot.personRaceTitle[i];
 			var itemValues = [];
 			var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(pivotData.value) };
-			Object.keys(pivotData.ranges.stopDateTime.counts).forEach(function(stopDateTimeKey) {
-				var a = pivotData.ranges.stopDateTime.counts[stopDateTimeKey];
-				var b = searchData.facet_ranges.stopDateTime.counts[stopDateTimeKey];
+			Object.keys(pivotData.ranges.stopDateTime.counts).forEach(function(countKey) {
+				var a = pivotData.ranges.stopDateTime.counts[countKey];
+				var b = searchData.facet_ranges.stopDateTime.counts[countKey];
 				var c = b == 0 ? 0 : (a / b);
-				var itemRangeValues = { x: parseInt(stopDateTimeKey.substr(0, stopDateTimeKey.indexOf('-'))), y: c, series: i }
+				var itemRangeValues = { x: parseInt(countKey.substr(0, countKey.indexOf('-'))), y: c, series: i }
 				itemValues.push(itemRangeValues);
 			});
 			graphData.push(itemData);
@@ -599,6 +669,9 @@ svgCauseLikelihoodPercent();
 		$( function() {
 			$( "#tabsStopCountPercent" ).tabs();
 			$( "#tabsStopCountTotal" ).tabs();
+			$( "#tabsSearchCountTotal" ).tabs();
+			$( "#tabsSearchRatePercentOfStops" ).tabs();
+			$( "#SearchRatePercentTotal" ).tabs();
 		} );
 		</script>
 
@@ -680,26 +753,93 @@ svgCauseLikelihoodPercent();
 				<h3 class="w3-text-2017-navy-peony ">Departmental Search Count</h3>
 				<p>This graph displays the number of searches broken down by search type and ethnicity. Adjusting the drop down menu will display the individual search counts relative to ethnic groups on a year-by-year basis. </p>
 				<div>
-					<svg id="svgSearchCountTotal" style="width: 600px; height: 400px; "></svg>
+					<div id="tabsSearchCountTotal">
+						<ul>
+							<li><a href="#tabsSearchCountTotal-1">Chart</a></li>
+							<li><a href="#tabsSearchCountTotal-2">Data</a></li>
+						</ul>
+						<div id="tabsSearchCountTotal-1">
+							<div>
+								<svg id="svgSearchCountTotal" style="width: 600px; height: 400px; "></svg>
+							</div>
+							<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+						</div>
+						<div id="tabsSearchCountTotal-2">
+							<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+								<thead id="theadSearchCountTotal" class="font-weight-bold ">
+									<tr id="theadRowSearchCountTotal">
+									</tr>
+								</thead>
+								<tbody id="tbodySearchCountTotal">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+
 				<p class="font-style-italic ">Drag the cursor over the graph to see the racial breakdown for any given year. Some percentages may be based on low levels of observation. Click the “Data” tab to review the raw stop data. </p>
 				<h2 class="w3-text-2017-navy-peony ">Departmental Search Rate</h2>
 				<h3 class="w3-text-2017-navy-peony ">Average Departmental Search Rate For Vehicle Stops</h3>
 				<p>This graph is a longitudinal representation of the average departmental search rate for vehicle stops since the department began reporting its data to the state. The black line represents the overall search rate for all motorists. </p>
 				<div>
-					<svg id="svgSearchRatePercentOfStops" style="width: 600px; height: 400px; "></svg>
+					<div id="tabsSearchRatePercentOfStops">
+						<ul>
+							<li><a href="#tabsSearchRatePercentOfStops-1">Chart</a></li>
+							<li><a href="#tabsSearchRatePercentOfStops-2">Data</a></li>
+						</ul>
+						<div id="tabsSearchRatePercentOfStops-1">
+							<div>
+								<svg id="svgSearchRatePercentOfStops" style="width: 600px; height: 400px; "></svg>
+							</div>
+							<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+						</div>
+						<div id="tabsSearchRatePercentOfStops-2">
+							<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+								<thead id="theadSearchRatePercentOfStops" class="font-weight-bold ">
+									<tr id="theadRowSearchRatePercentOfStops">
+									</tr>
+								</thead>
+								<tbody id="tbodySearchRatePercentOfStops">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+
 				<p>Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual stop/search counts from the NC Department of Justice. </p>
 				<h3 class="w3-text-2017-navy-peony ">Search Data by Race/Ethnic Composition</h3>
 				<p>These graphs reflect the race/ethnic composition of drivers searched by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
 				<div>
 					<svg id="svgSearchRatePie" style="width: 600px; height: 400px; "></svg>
 				</div>
+
 				<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
 				<h3 class="w3-text-2017-navy-peony ">Longitudinal view of annual percent of search by race/ethnic composition</h3>
 				<div>
-					<svg id="svgSearchRatePercentTotal" style="width: 600px; height: 400px; "></svg>
+					<div id="tabsSearchRatePercentTotal">
+						<ul>
+							<li><a href="#tabsSearchRatePercentTotal-1">Chart</a></li>
+							<li><a href="#tabsSearchRatePercentTotal-2">Data</a></li>
+						</ul>
+						<div id="tabsSearchRatePercentTotal-1">
+							<div>
+								<svg id="svgSearchRatePercentTotal" style="width: 600px; height: 400px; "></svg>
+							</div>
+							<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+						</div>
+						<div id="tabsSearchRatePercentTotal-2">
+							<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+								<thead id="theadSearchRatePercentTotal" class="font-weight-bold ">
+									<tr id="theadRowSearchRatePercentTotal">
+									</tr>
+								</thead>
+								<tbody id="tbodySearchRatePercentTotal">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+
 				<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
 				<div>
 					<svg id="svgCauseLikelihoodPercent" style="width: 600px; height: 400px; "></svg>
