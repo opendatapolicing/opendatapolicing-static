@@ -11,70 +11,6 @@
 		<script src="{{staticBaseUrl}}/js/enUS/TrafficSearchPage.js"></script>
 		<script src="{{staticBaseUrl}}/js/enUS/SearchBasisPage.js"></script>
 		<script src="{{staticBaseUrl}}/js/enUS/ContrabandPage.js"></script>
-
-		<script>//<![CDATA[
-		$(document).ready(function() {
-			window.eventBus = new EventBus('/eventbus');
-			websocketHomePage();
-		});
-
-		async function websocketHomePage(tableName, success) {
-			window.eventBus.onopen = function () {
-				registerHandlerHomePage('TrafficStop', websocketTrafficStopInner);
-				registerHandlerHomePage('TrafficPerson', websocketTrafficPersonInner);
-				registerHandlerHomePage('TrafficSearch', websocketTrafficSearchInner);
-				registerHandlerHomePage('SearchBasis', websocketSearchBasisInner);
-				registerHandlerHomePage('TrafficContraband', websocketTrafficContrabandInner);
-			}
-		}
-
-		function registerHandlerHomePage(tableName, success) {
-			window.eventBus.registerHandler('websocket' + tableName, function (error, message) {
-				var json = message.body;
-				var id = json['id'];
-				var pk = json['pk'];
-				var pkPage = $('#' + tableName + 'Form :input[name=pk]').val();
-				var pks = json['pks'];
-				var empty = json['empty'];
-				var numFound = parseInt(json['numFound']);
-				var numPATCH = parseInt(json['numPATCH']);
-				var percent = Math.floor( numPATCH / numFound * 100 ) + '%';
-				var $box = $('<div>').attr('class', 'w3-quarter box-' + id + ' ').attr('id', 'box-' + id).attr('data-numPATCH', numPATCH);
-				var $margin = $('<div>').attr('class', 'w3-margin ').attr('id', 'margin-' + id);
-				var $card = $('<div>').attr('class', 'w3-card w3-white ').attr('id', 'card-' + id);
-				var $header = $('<div>').attr('class', 'w3-container fa-pale-green ').attr('id', 'header-' + id);
-				var $i = $('<i>').attr('class', 'far fa-newspaper w3-margin-right ').attr('id', 'icon-' + id);
-				var $headerSpan = $('<span>').attr('class', '').text('modify traffic stops in ' + json.timeRemaining);
-				var $x = $('<span>').attr('class', 'w3-button w3-display-topright ').attr('onclick', '$("#card-' + id + '").hide(); ').attr('id', 'x-' + id);
-				var $body = $('<div>').attr('class', 'w3-container w3-padding ').attr('id', 'text-' + id);
-				var $bar = $('<div>').attr('class', 'w3-light-gray ').attr('id', 'bar-' + id);
-				var $progress = $('<div>').attr('class', 'w3-pale-green ').attr('style', 'height: 24px; width: ' + percent + '; ').attr('id', 'progress-' + id).text(numPATCH + '/' + numFound);
-				$card.append($header);
-				$header.append($i);
-				$header.append($headerSpan);
-				$header.append($x);
-				$body.append($bar);
-				$bar.append($progress);
-				$card.append($body);
-				$box.append($margin);
-				$margin.append($card);
-				if(numPATCH < numFound) {
-					var $old_box = $('.box-' + id);
-					if(!$old_box.size()) {
-						$('.top-box').append($box);
-					} else if($old_box && $old_box.attr('data-numPATCH') < numFound) {
-						$('.box-' + id).html($margin);
-					}
-				} else {
-					$('.box-' + id).remove();
-				}
-				if(pk && pkPage && pk == pkPage) {
-					if(success)
-						success(json);
-				}
-			});
-		}
-		//]]></script>
 {{/partial}}
 
 {{#partial "body_content"}}
@@ -106,7 +42,7 @@
 					<div class="w3-rest ">
 						<img src="{{staticBaseUrl}}/svg/state-{{stateAbbreviation}}.svg" class="state-img w3-img " style="height: 128px; "/>
 						<p><span class="state-stop-count ">{{stopCountStr}}</span><span> stops</span></p>
-						<a class="state-search-link " href="/state/{{objectId}}" class="w3-btn ">{{stateName}} {{stateAbbreviation}}</a>
+						<a class="state-search-link " href="/report?var=stateAbbreviation:{{stateAbbreviation}}" class="w3-btn ">{{stateName}} {{stateAbbreviation}}</a>
 					</div>
 					{{/each}}
 				</div>
