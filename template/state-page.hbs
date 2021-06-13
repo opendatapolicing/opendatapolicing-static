@@ -64,6 +64,9 @@
 								<p>Review agency-level data on the race/ethnic composition demographics of people stopped, searched, and subjected to force in the course of traffic stops in a given jurisdiction. </p>
 								<p>Click here to browse a list of all agencies for which data is available. </p>
 								<h3>View Agency Dashboard</h3>
+								<div>
+									<input type="text" class="suggestTrafficStopAgency w3-input w3-border w3-bar-item " name="suggestTrafficStopAgency" id="suggestTrafficStopAgencyMenu1" autocomplete="off" oninput="suggestTrafficStopAgency( [ { 'name': 'q', 'value': 'agencySuggest:' + $(this).val() }, { 'name': 'rows', 'value': '10' }, { 'name': 'fl', 'value': 'pk,pageUrlPk,enrollmentCompleteName' } ], $('#suggestListSchoolEnrollmentMenu1'), ); " onkeyup="if (event.keyCode === 13) { event.preventDefault(); window.location.href = '/enrollment?q=objectText:' + encodeURIComponent(this.value) + '&amp;start=0&amp;rows=10'; }">
+								</div>
 								<h3>Largest Agencies</h3>
 								<table class="w3-table w3-bordered  w3-hoverable w3-border-top ">
 									<thead>
