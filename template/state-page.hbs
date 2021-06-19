@@ -6,15 +6,33 @@
 		<meta name="keywords" content="">
 		<script src="{{staticBaseUrl}}/js/sockjs.js"></script>
 		<script src="{{staticBaseUrl}}/js/vertx-eventbus.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficStopPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficPersonPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficSearchPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/SearchBasisPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/ContrabandPage.js"></script>
+		<script src="{{staticBaseUrl}}/js/enUS/SiteAgencyPage.js"></script>
+		<script src="{{staticBaseUrl}}/js/jQuery-Autocomplete/jquery.autocomplete.js"></script>
 
 		<script>
 		$(function() {
 			$( "#tabsAgencies" ).tabs();
+			$( "#suggestSiteAgencyInput" ).autocomplete({
+				minChars: 1
+				, dataType: "json"
+				, serviceUrl: "/api/agency"
+				, paramName: "q"
+				, paramPrefix: "objectSuggest:"
+				, onSelect: function(suggestion) {
+					window.location.href = "/report?var=stateAbbreviation:" + encodeURIComponent(suggestion.data.stateAbbreviation) + "&var=agencyTitle:" + encodeURIComponent(suggestion.data.agencyTitle);
+				}
+				, transformResult: function(response) {
+					return {
+						suggestions: jQuery.map(response.list, function(item) {
+							return {
+								value: item.agencyTitle
+								, data: item
+								, id: item.pk
+							};
+						})
+					};
+				}
+			});
 		});
 		</script>
 {{/partial}}
@@ -65,7 +83,7 @@
 								<p>Click here to browse a list of all agencies for which data is available. </p>
 								<h3>View Agency Dashboard</h3>
 								<div>
-									<input type="text" class="suggestTrafficStopAgency w3-input w3-border w3-bar-item " name="suggestTrafficStopAgency" id="suggestTrafficStopAgencyMenu1" autocomplete="off" oninput="suggestTrafficStopAgency( [ { 'name': 'q', 'value': 'agencySuggest:' + $(this).val() }, { 'name': 'rows', 'value': '10' }, { 'name': 'fl', 'value': 'pk,pageUrlPk,enrollmentCompleteName' } ], $('#suggestListSchoolEnrollmentMenu1'), ); " onkeyup="if (event.keyCode === 13) { event.preventDefault(); window.location.href = '/enrollment?q=objectText:' + encodeURIComponent(this.value) + '&amp;start=0&amp;rows=10'; }">
+									<input type="text" class="suggestSiteAgency w3-input w3-border w3-bar-item " name="suggestSiteAgency" id="suggestSiteAgencyInput">
 								</div>
 								<h3>Largest Agencies</h3>
 								<table class="w3-table w3-bordered  w3-hoverable w3-border-top ">
@@ -88,6 +106,70 @@
 								</table>
 							</div>
 							<div id="tabsAgencies-2">
+								<p>Use this feature to identify the stop and search patterns of individual police officers. Search for North Carolina traffic stops using the form fields below. Use <a href="/host-search">Advanced Search</a> for additional filtering criteria. When you have found the stop you are looking for, click the Officer ID hyperlink to review the data associated with the officer involved. </p>
+								<div class="">
+									<div class="w3-row ">
+										<div class="w3-rest ">
+											<div class="font-weight-bold ">Agency name</div>
+											<div>
+												<input type="text" placeholder="Agency Name" id="agencySuggestInput" class="w3-input w3-border " name="agencySuggest"/>
+											</div>
+											<div class="w3-text-gray ">ex: Durham Police Department</div>
+										</div>
+									</div>
+									<div class="w3-row ">
+										<div class="w3-half ">
+											<div class="font-weight-bold ">Start date</div>
+											<div>
+												<input type="text" placeholder="Start date" id="startDateInput" class="w3-input w3-border " name="startDate"/>
+											</div>
+											<div class="w3-text-gray ">ex: 8/13/2013</div>
+										</div>
+										<div class="w3-half ">
+											<div class="font-weight-bold ">End date</div>
+											<div>
+												<input type="text" placeholder="End date" id="endDateInput" class="w3-input w3-border " name="endDate"/>
+											</div>
+											<div class="w3-text-gray ">ex: 8/13/2013</div>
+										</div>
+									</div>
+									<div class="w3-row ">
+										<div class="w3-quarter ">
+											<div class="font-weight-bold ">Age</div>
+											<div>
+												<input type="number" placeholder="Age" id="ageInput" class="w3-input w3-border " name="age" max="130" min="0"/>
+											</div>
+										</div>
+										<div class="w3-quarter ">
+											<div class="font-weight-bold ">Gender</div>
+											<div>
+												<select id="genderInput" class="w3-input " name="gender"/>
+													<option value="" selected="selected">---</option>
+													<option value="M">Male</option>
+													<option value="F">Female</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="w3-row ">
+										<div class="w3-half ">
+											<div class="font-weight-bold ">Race</div>
+											<div>
+												<select type="text" placeholder="Race" id="raceInput" class="w3-input w3-border " name="race">
+													<option value="" selected="selected">---</option>
+													{{#each personRaceTitles}}
+													<option value="{{this}}">{{this}}</option>
+													{{/each}}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="w3-row ">
+										<div class="w3-right-align ">
+											<button class="w3-btn w3-round w3-border w3-indigo " type="submit">Search</button>
+										</div>
+									</div>
+								</div>
 								<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
 									<thead id="theadStopCountPercent" class="font-weight-bold ">
 										<tr id="theadRowStopCountPercent">
