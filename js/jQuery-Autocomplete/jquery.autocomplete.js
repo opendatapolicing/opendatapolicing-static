@@ -204,7 +204,7 @@
                 that.select($(this).data('index'));
             });
 
-            container.on('click.autocomplete', function () {
+            container.on('click.autocomplete', function (e) {
                 clearTimeout(that.blurTimeoutId);
             })
 
@@ -252,7 +252,7 @@
                 if (that.selection && that.currentValue !== query) {
                     (options.onInvalidateSelection || $.noop).call(that.element);
                 }
-            }, 200);
+            }, 5000);
         },
 
         abortAjax: function () {
