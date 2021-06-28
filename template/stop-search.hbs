@@ -133,28 +133,13 @@
 					{{else}}
 					<a class="w3-button " title="last page" href="{{pagination.pageEnd.url}}"><i class="fas fa-fast-forward"></i></a>
 					{{/if}}
-					<span class="w3-padding ">{{pagination.startNum}} - {{pagination.endNum}} of {{pagination.numFound}}</span>
+					<span class="w3-padding ">{{pagination.startNum}} - {{pagination.endNum}} of {{numberFormat pagination.numFound "integer" "en_US"}}</span>
 					{{else}}
 				</div>
 {{/partial}}
 
 {{#partial "body_content"}}
 	<div id='wrap'>
-
-		<div class="w3-top w3-2017-navy-peony ">
-			<div class="w3-bar w3-content ">
-				<div class="w3-dropdown-hover w3-hide-medium w3-hide-large ">
-					<button class="w3-button ">
-						<i class="fas fa-bars"></i>
-					</button>
-					<div class="w3-dropdown-content w3-bar-block w3-card-4 ">
-						<a class="w3-bar-item w3-button " href="/about">About</a>
-					</div>
-				</div>
-				<a class="w3-bar-item w3-button font-weight-bold " href="/">Open Data Policing</a>
-				<a class="w3-bar-item w3-hide-small " href="/about">About</a>
-			</div>
-		</div>
 
 		<div class="w3-2017-navy-peony w3-padding-32 ">
 			<div class="w3-content w3-center ">
@@ -163,7 +148,7 @@
 						<h1>Find a Traffic Stop</h1>
 					</div>
 					<div class="w3-right w3-padding-16 ">
-						<a class="w3-btn w3-round w3-border w3-indigo " href="/agency-search">Find an Agency</a>
+						<a class="w3-btn w3-round w3-border w3-indigo " href="/agency?var=stateAbbreviation:{{stateAbbreviation}}">Find an Agency</a>
 					</div>
 				</div>
 			</div>
@@ -294,9 +279,9 @@
 							<th class="font-weight-bold ">Gender</th>
 							<th class="font-weight-bold ">Race</th>
 							<th class="font-weight-bold ">Age</th>
-							<th class="font-weight-bold ">Agency</th>
 							<th class="font-weight-bold ">Purpose</th>
 							<th class="font-weight-bold ">Action</th>
+							<th class="font-weight-bold ">Agency</th>
 							<th class="font-weight-bold ">Officer ID</th>
 						</tr>
 					</thead>
@@ -307,10 +292,14 @@
 							<td>{{#each personGenderTitles}}{{#if @first}}{{else}}, {{/if}}{{this}}{{/each}}</td>
 							<td>{{#each personRaceTitles}}{{#if @first}}{{else}}, {{/if}}{{this}}{{/each}}</td>
 							<td>{{#each personAges}}{{#if @first}}{{else}}, {{/if}}{{this}}{{/each}}</td>
-							<td>{{agencyTitle}}</td>
 							<td>{{stopPurposeTitle}}</td>
 							<td>{{stopActionTitle}}</td>
-							<td>{{stopOfficerId}}</td>
+							<td>
+								<a href="/report?var=stateAbbreviation:{{urlencode stateAbbreviation}}&var=agencyTitle:{{urlencode agencyTitle}}" class="w3-text-indigo ">{{agencyTitle}}</a>
+							</td>
+							<td>
+								<a href="/report?var=stateAbbreviation:{{urlencode stateAbbreviation}}&var=agencyTitle:{{urlencode agencyTitle}}&var=stopOfficerId:{{urlencode stopOfficerId}}" class="w3-text-indigo ">{{stopOfficerId}}</a>
+							</td>
 						</tr>
 						{{/each}}
 					</tbody>

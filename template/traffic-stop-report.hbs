@@ -676,6 +676,25 @@ svgCauseLikelihoodPercent();
 		</script>
 
 {{/partial}} {{#partial "body_content"}}
+
+		<div class="w3-2017-navy-peony w3-padding-32 ">
+			<div class="w3-content w3-center ">
+				<div class="w3-row w3-padding ">
+					<div class="w3-left ">
+						{{#if stopOfficerId}}
+						<h2>Data for Officer ID: {{stopOfficerId}}</h2>
+						<h3>{{agencyTitle}}</h3>
+						{{else}}
+						<h2>{{agencyTitle}}</h2>
+						{{/if}}
+					</div>
+					<div class="w3-right w3-padding-16 ">
+						<a class="w3-btn w3-round w3-border w3-indigo " href="/stop?var=stateAbbreviation:{{stateAbbreviation}}">Find a Stop</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="w3-light-gray ">
 			<div class="w3-content w3-padding ">
 				<div>
