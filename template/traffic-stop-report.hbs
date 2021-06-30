@@ -31,7 +31,7 @@ function personRaceColor(personRaceTitle) {
 
 function svgCensusCountPie() {
 	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles" 
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -112,7 +112,7 @@ svgStopCountPie();
 
 function svgStopCountPercent() {
 	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -189,7 +189,7 @@ svgStopCountPercent();
 
 function svgStopCountTotal(stopPurposeTitle) {
 	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			+ (stopPurposeTitle ? ("&fq=stopPurposeTitle:" + stopPurposeTitle) : "")
@@ -281,7 +281,7 @@ svgStopCountTotal();
 
 function svgSearchCountTotal(searchTypeTitle) {
 	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			+ (searchTypeTitle ? ("&fq=searchTypeTitle:" + searchTypeTitle) : "")
@@ -373,7 +373,7 @@ svgSearchCountTotal();
 
 function svgSearchRatePercentOfStops() {
 	var stopUrl = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -464,7 +464,7 @@ svgSearchRatePercentOfStops();
 
 function svgSearchRatePie() {
 	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.field=personRaceTitle"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -510,7 +510,7 @@ svgSearchRatePie();
 
 function svgSearchRatePercentTotal() {
 	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -566,13 +566,13 @@ svgSearchRatePercentTotal();
 
 function svgCauseLikelihoodPercent() {
 	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.pivot=personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
-			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
 	$.get(url1, function( stopData ) {
 		var url2 = "/api/traffic-search?rows=0&facet=true&facet.pivot=personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
-				+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
+				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 				;
