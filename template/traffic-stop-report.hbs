@@ -12,23 +12,6 @@
 		<link rel="stylesheet" href="{{staticBaseUrl}}/css/nv.d3.css"/>
 <script>//<![CDATA[
 
-function yearSearch() {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.field=stopYear"
-			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
-			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
-			;
-	$.get(url, function( searchData ) {
-
-		$('#selectStopCountPie').append('<option value="">Total</option>');
-
-		var years = Object.keys(searchData.facet_fields.stopYear).sort();
-		years.forEach(function(year) {
-			$('#selectStopCountPie').append('<option value="' + year + '">' + year + '</option>');
-		});
-	});
-}
-yearSearch();
-
 function personRaceColor(personRaceTitle) {
 	switch(personRaceTitle) {
 		case "White":
@@ -46,9 +29,9 @@ function personRaceColor(personRaceTitle) {
 	} 
 }
 
-function svgCensusCountPie(year) {
+function svgCensusCountPie() {
 	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles" 
-			+ (year ? ("&fq=stopYear:" + year) : "")
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -90,52 +73,46 @@ function svgCensusCountPie(year) {
 //svgCensusCountPie();
 
 
-function svgStopCountPie(year) {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles" 
-			+ (year ? ("&fq=stopYear:" + year) : "")
-			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
-			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+function svgStopCountPie() {
+	var searchData = JSON.parse($($.parseHTML("{{stopJson}}")).text());
+	var graphData = [];
+	var facetTotal = 0;
+	var personRaceTitles = Object.keys(searchData.facet_fields.personRaceTitles);
+	personRaceTitles.forEach(function(fieldLabel) {
+		facetTotal += searchData.facet_fields.personRaceTitles[fieldLabel];
+	});
+	personRaceTitles.forEach(function(fieldLabel) {
+		var a = searchData.facet_fields.personRaceTitles[fieldLabel];
+		var c = facetTotal == 0 ? 0 : (a / facetTotal);
+		var itemData = { label: fieldLabel, value: c, color: personRaceColor(fieldLabel) };
+		graphData.push(itemData);
+	});
+
+	nv.addGraph(function() {
+		var chart = nv.models.pieChart()
+			.x(function(d) { return d.label })
+			.y(function(d) { return d.value })
+			.showLabels(true)
+			.labelThreshold(.05)
+			.labelType('percent')
+			.donut(true)
+			.donutRatio(0.35)
+			.color(function(d){ return d.data.color;})
 			;
-	$.get(url, function( searchData ) {
-		var graphData = [];
-		var facetTotal = 0;
-		var personRaceTitles = Object.keys(searchData.facet_fields.personRaceTitles);
-		personRaceTitles.forEach(function(fieldLabel) {
-			facetTotal += searchData.facet_fields.personRaceTitles[fieldLabel];
-		});
-		personRaceTitles.forEach(function(fieldLabel) {
-			var a = searchData.facet_fields.personRaceTitles[fieldLabel];
-			var c = facetTotal == 0 ? 0 : (a / facetTotal);
-			var itemData = { label: fieldLabel, value: c, color: personRaceColor(fieldLabel) };
-			graphData.push(itemData);
-		});
 
-		nv.addGraph(function() {
-			var chart = nv.models.pieChart()
-				.x(function(d) { return d.label })
-				.y(function(d) { return d.value })
-				.showLabels(true)
-				.labelThreshold(.05)
-				.labelType('percent')
-				.donut(true)
-				.donutRatio(0.35)
-				.color(function(d){ return d.data.color;})
-				;
+		d3.select('#svgStopCountPie')
+			.datum(graphData)
+			.transition().duration(350)
+			.call(chart);
 
-			d3.select('#svgStopCountPie')
-				.datum(graphData)
-				.transition().duration(350)
-				.call(chart);
-
-			return chart;
-		});
+		return chart;
 	});
 }
 svgStopCountPie();
 
-function svgStopCountPercent(year) {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
-			+ (year ? ("&fq=stopYear:" + year) : "")
+function svgStopCountPercent() {
+	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -211,10 +188,11 @@ function svgStopCountPercent(year) {
 svgStopCountPercent();
 
 function svgStopCountTotal(stopPurposeTitle) {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
-			+ (stopPurposeTitle ? ("&fq=stopPurposeTitle:" + stopPurposeTitle) : "")
+	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+			+ (stopPurposeTitle ? ("&fq=stopPurposeTitle:" + stopPurposeTitle) : "")
 			;
 	$.get(url, function( searchData ) {
 		var graphData = [];
@@ -302,10 +280,11 @@ function svgStopCountTotal(stopPurposeTitle) {
 svgStopCountTotal();
 
 function svgSearchCountTotal(searchTypeTitle) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
-			+ (searchTypeTitle ? ("&fq=searchTypeTitle:" + searchTypeTitle) : "")
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+			+ (searchTypeTitle ? ("&fq=searchTypeTitle:" + searchTypeTitle) : "")
 			;
 	$.get(url, function( searchData ) {
 		var graphData = [];
@@ -392,13 +371,13 @@ function svgSearchCountTotal(searchTypeTitle) {
 }
 svgSearchCountTotal();
 
-function svgSearchRatePercentOfStops(year) {
-	var stopUrl = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
-			+ (year ? ("&fq=stopYear:" + year) : "")
+function svgSearchRatePercentOfStops() {
+	var stopUrl = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles"
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
-	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -483,9 +462,9 @@ function svgSearchRatePercentOfStops(year) {
 }
 svgSearchRatePercentOfStops();
 
-function svgSearchRatePie(year) {
+function svgSearchRatePie() {
 	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.field=personRaceTitle"
-			+ (year ? ("&fq=stopYear:" + year) : "")
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -529,9 +508,9 @@ function svgSearchRatePie(year) {
 }
 svgSearchRatePie();
 
-function svgSearchRatePercentTotal(year) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start=2000-01-01T00:00:00.000Z&facet.range.end=NOW-1YEAR&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
-			+ (year ? ("&fq=stopYear:" + year) : "")
+function svgSearchRatePercentTotal() {
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -585,15 +564,15 @@ function svgSearchRatePercentTotal(year) {
 }
 svgSearchRatePercentTotal();
 
-function svgCauseLikelihoodPercent(year) {
+function svgCauseLikelihoodPercent() {
 	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.pivot=personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
-			+ (year ? ("&fq=stopYear:" + year) : "")
+			+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
 	$.get(url1, function( stopData ) {
 		var url2 = "/api/traffic-search?rows=0&facet=true&facet.pivot=personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
-				+ (year ? ("&fq=stopYear:" + year) : "")
+				+ "{{#if stopYear}}&fq=stopYear:{{urlencode stopYear}}{{/if}}"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 				;
@@ -671,7 +650,7 @@ svgCauseLikelihoodPercent();
 			$( "#tabsStopCountTotal" ).tabs();
 			$( "#tabsSearchCountTotal" ).tabs();
 			$( "#tabsSearchRatePercentOfStops" ).tabs();
-			$( "#SearchRatePercentTotal" ).tabs();
+			$( "#tabsSearchRatePercentTotal" ).tabs();
 		});
 		</script>
 
@@ -709,7 +688,12 @@ svgCauseLikelihoodPercent();
 							<svg id="svgStopCountPie" style="width: 300px; height: 400px; "></svg>
 						</div>
 						<div>
-							<select id="selectStopCountPie" onchange="svgStopCountPie(this.value)"></select>
+							<select id="selectStopCountPie" onchange="svgStopCountPie(this.value)">
+								<option value="">Total</option>
+								{{#each years}}
+								<option value="{{this}}">{{this}}</option>
+								{{/each}}
+							</select>
 						</div>
 						<p class="font-style-italic ">Adjusting the drop down menu will display the race/ethnic composition breakdown of stops on a year-by-year basis. Some percentages may be based on low levels of observation. </p>
 					</div>
