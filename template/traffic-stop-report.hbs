@@ -29,49 +29,38 @@ function personRaceColor(personRaceTitle) {
 	} 
 }
 
-function svgCensusCountPie() {
-	var url = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.field=personRaceTitles" 
-			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
-			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
-			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+function svgCensusCountPie(agencyTotal, agencyTotalWhite, agencyTotalBlack, agencyTotalIndigenous, agencyTotalAsian, agencyTotalOther, agencyTotalLatinx) {
+	var graphData = [];
+	graphData.push({ label: "White", value: agencyTotalWhite, color: personRaceColor("White") });
+	graphData.push({ label: "Black", value: agencyTotalBlack, color: personRaceColor("Black") });
+	graphData.push({ label: "Indigenous", value: agencyTotalIndigenous, color: personRaceColor("Indigenous") });
+	graphData.push({ label: "Asian", value: agencyTotalAsian, color: personRaceColor("Asian") });
+	graphData.push({ label: "Other", value: agencyTotalOther, color: personRaceColor("Other") });
+	graphData.push({ label: "Latinx", value: agencyTotalLatinx, color: personRaceColor("Latinx") });
+
+	nv.addGraph(function() {
+		var chart = nv.models.pieChart()
+			.x(function(d) { return d.label })
+			.y(function(d) { return d.value })
+			.showLabels(true)
+			.labelThreshold(.05)
+			.labelType('percent')
+			.donut(true)
+			.donutRatio(0.35)
+			.color(function(d){ return d.data.color;})
 			;
-	$.get(url, function( searchData ) {
-		var graphData = [];
-		var facetTotal = 0;
-		var personRaceTitles = Object.keys(searchData.facet_fields.personRaceTitles);
-		personRaceTitles.forEach(function(fieldLabel) {
-			facetTotal += searchData.facet_fields.personRaceTitles[fieldLabel];
-		});
-		personRaceTitles.forEach(function(fieldLabel) {
-			var a = searchData.facet_fields.personRaceTitles[fieldLabel];
-			var c = facetTotal == 0 ? 0 : (a / facetTotal);
-			var itemData = { label: fieldLabel, value: c, color: personRaceColor(fieldLabel) };
-			graphData.push(itemData);
-		});
 
-		nv.addGraph(function() {
-			var chart = nv.models.pieChart()
-				.x(function(d) { return d.label })
-				.y(function(d) { return d.value })
-				.showLabels(true)
-				.labelThreshold(.05)
-				.labelType('percent')
-				.donut(true)
-				.donutRatio(0.35)
-				.color(function(d){ return d.data.color;})
-				;
+		d3.select('#svgCensusCountPie')
+			.datum(graphData)
+			.transition().duration(350)
+			.call(chart);
 
-			d3.select('#svgCensusCountPie')
-				.datum(graphData)
-				.transition().duration(350)
-				.call(chart);
-
-			return chart;
-		});
+		return chart;
 	});
 }
-//svgCensusCountPie();
-
+{{#if agency.agencyTotal}}
+svgCensusCountPie({{agency.agencyTotal}}, {{agency.agencyTotalWhite}}, {{agency.agencyTotalBlack}}, {{agency.agencyTotalIndigenous}}, {{agency.agencyTotalAsian}}, {{agency.agencyTotalOther}}, {{agency.agencyTotalLatinx}});
+{{/if}}
 
 function svgStopCountPie() {
 	var searchData = JSON.parse($($.parseHTML("{{stopJson}}")).text());
@@ -676,9 +665,57 @@ svgCauseLikelihoodPercent();
 
 		<div class="w3-light-gray ">
 			<div class="w3-content w3-padding ">
-				<div>
-					<svg id="svgCensusCountPie" style="width: 600px; height: 400px; "></svg>
+				{{#if agency.agencyTotal}}
+				<h2 class="w3-text-2017-navy-peony ">ACS Census Data {{numberFormat ACS_API_YEAR "###0" "en_US"}}</h2>
+				<hr/>
+				<h3 class="w3-text-2017-navy-peony ">Local Population (percentage by race/ethnic composition)</h3>
+				<p>This graph reflects the race/ethnic composition of the jurisdiction at the time of the most recent survey by the Census Bureau. It is included for comparative purposes. The actual local driving population within a given jurisdiction may vary significantly from census figures. </p>
+				<div class="w3-row ">
+					<div class="w3-third ">
+						<div>
+							<svg id="svgCensusCountPie" style="width: 300px; height: 400px; "></svg>
+						</div>
+					</div>
+					<div class="w3-twothird ">
+						<h3 class="w3-text-2017-navy-peony ">Tabular view of census data</h3>
+						<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+							<thead id="theadCensusCountPercent" class="font-weight-bold ">
+								<tr id="theadRowCensusCountPercent">
+									<th></th>
+									<th>White</th>
+									<th>Black</th>
+									<th>Indigenous</th>
+									<th>Asian</th>
+									<th>Latinx</th>
+									<th>Other</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyCensusCountPercent">
+								<tr id="tbodyRowCensusCountPopulation">
+									<td>Population</td>
+									<td>{{numberFormat agency.agencyTotalWhite "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotalBlack "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotalIndigenous "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotalAsian "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotalLatinx "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotalOther "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyTotal "integer" "en_US"}}</td>
+								</tr>
+								<tr id="tbodyRowCensusCountPercent">
+									<td>Percent</td>
+									<td>{{numberFormat agency.agencyPercentWhite "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentBlack "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentIndigenous "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentAsian "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentLatinx "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentOther "integer" "en_US"}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
+				{{/if}}
 				<h2 class="w3-text-2017-navy-peony ">Traffic Stops</h2>
 				<h3 class="w3-text-2017-navy-peony ">Traffic Stops (percentage by race/ethnic composition)</h3>
 				<p>These graphs reflect the race/ethnic composition of drivers stopped by law enforcement officers in the jurisdiction since the department began reporting its data to the state. </p>
