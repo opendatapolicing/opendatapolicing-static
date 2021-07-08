@@ -554,13 +554,134 @@ function svgSearchRatePercentTotal() {
 svgSearchRatePercentTotal();
 
 function svgCauseLikelihoodPercent() {
-	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.pivot=personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
+	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot=personRaceTitles,stopPurposeTitle&facet.pivot={!range=r1}personRaceTitles&facet.field=stopPurposeTitle"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
 	$.get(url1, function( stopData ) {
-		var url2 = "/api/traffic-search?rows=0&facet=true&facet.pivot=personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
+		var url2 = "/api/traffic-search?rows=0&facet=true&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot=personRaceTitle,stopPurposeTitle&facet.pivot={!range=r1}personRaceTitle&facet.field=stopPurposeTitle"
+				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
+				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
+				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+				;
+		$.get(url2, function( searchData ) {
+			var $theadRow = $('#theadRowCauseLikelihoodPercent');
+			var $tbody = $('#tbodyCauseLikelihoodPercent');
+			$theadRow.empty();
+			$theadRow.append('<th>Year</th>')
+			$theadRow.append('<th>Stop Purpose</th>')
+			var yearRows = {}
+			var totalRows = {}
+			var whiteSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === 'White');
+			var whiteStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === 'White')
+			var graphData = [];
+			for (i = 0; i < searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].length; i++) {
+				var currentSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'][i];
+
+				$theadRow.append('<th>' + currentSearchPivotData.value + '</th>')
+
+				if(currentSearchPivotData.value != 'White') {
+					var itemValues = [];
+					var itemData = { key: currentSearchPivotData.value + ' vs. White', seriesIndex: i, values: itemValues };
+					for (j = 0; j < currentSearchPivotData.pivot.length; j++) {
+						var currentSearchRangeData = currentSearchPivotData.pivot[j];
+						var whiteSearchRangeData = whiteSearchPivotData.pivot.find(x => x.value === currentSearchRangeData.value);
+						var currentStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === currentSearchPivotData.value);
+						if(currentStopPivotData && currentStopPivotData.pivot) {
+							var a = currentSearchRangeData.count;
+							var b = currentStopPivotData.pivot.find(x => x.value === currentSearchRangeData.value).count;
+							var c = b == 0 ? 0 : (a / b);
+							var aWhite = whiteSearchRangeData.count;
+							var bWhite = whiteStopPivotData.pivot.find(x => x.value === currentSearchRangeData.value).count;
+							var cWhite = bWhite == 0 ? 0 : (aWhite / bWhite);
+							var z = (c - cWhite)/cWhite;
+							if(!c || !isFinite(z))
+								z = 0;
+							var itemRangeValues = { label: currentSearchRangeData.value, value: z }
+							itemValues.push(itemRangeValues);
+						}
+					}
+					graphData.push(itemData);
+				}
+			}
+			for (i = 0; i < searchData.facet_pivot['personRaceTitles,stopPurposeTitle'].length; i++) {
+				var pivotData = searchData.facet_pivot['personRaceTitles,stopPurposeTitle'][i];
+	
+				$theadRow.append('<th>' + pivotData.value + '</th>')
+	
+				pivotData.pivot.forEach(function(pivotData2) {
+					var countKeys2 = Object.keys(pivotData2.ranges.stopDateTime.counts);
+					var stopPurposeTitle = pivotData2.value;
+					countKeys2.forEach(function(countKey) {
+						var a = pivotData2.ranges.stopDateTime.counts[countKey];
+						var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+						var $yearRow = yearRows[year + '-' + stopPurposeTitle];
+						if(!$yearRow) {
+							$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+							$tbody.append($yearRow);
+							yearRows[year + '-' + stopPurposeTitle] = $yearRow;
+						}
+						$yearRow.append('<td>' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+					});
+					var $totalRow = totalRows[stopPurposeTitle];
+					if(!$totalRow) {
+						$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
+						totalRows[stopPurposeTitle] = $totalRow;
+					}
+					$totalRow.append('<td>' + pivotData2.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				});
+				Object.keys(totalRows).forEach(function(key) {
+					$tbody.append(totalRows[key]);
+				});
+				graphData.push(itemData);
+			}
+
+			nv.addGraph(function() {
+				var chart = nv.models.multiBarHorizontalChart()
+					.x((d) => d.label)
+					.y((d) => d.value)
+					.margin({top: 20, right: 50, bottom: 20, left: 180})
+					.showValues(true)
+					.tooltips(true)
+					.transitionDuration(350)
+					.showControls(false)
+					;
+
+				chart.yAxis
+					.axisLabel('Additional percentage or search by search-cause')
+					.tickFormat(d3.format('%'));
+					;
+
+				chart
+					.valueFormat(d3.format('%'));
+					;
+
+				d3.select('#svgCauseLikelihoodPercent')
+					.datum(graphData)
+					.attr('width', "100%")
+					.attr('height', "100%")
+					.attr('preserveAspectRatio', "xMinYMin")
+					.call(chart)
+					;
+
+				nv.utils.windowResize(chart.update);
+
+				return chart;
+			});
+		});
+	});
+}
+svgCauseLikelihoodPercent();
+
+function svgContrabandHitRate() {
+	var url1 = "/api/traffic-search?rows=0&facet=true&facet.pivot=personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
+			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
+			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
+			;
+	$.get(url1, function( stopData ) {
+		var url2 = "/api/contraband?rows=0&facet=true&facet.pivot=personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
 				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -616,7 +737,7 @@ function svgCauseLikelihoodPercent() {
 					.valueFormat(d3.format('%'));
 					;
 
-				d3.select('#svgCauseLikelihoodPercent')
+				d3.select('#svgContrabandHitRate')
 					.datum(graphData)
 					.attr('width', "100%")
 					.attr('height', "100%")
@@ -631,7 +752,7 @@ function svgCauseLikelihoodPercent() {
 		});
 	});
 }
-svgCauseLikelihoodPercent();
+svgContrabandHitRate();
 //]]></script>
 		<script>
 		$(function() {
@@ -640,6 +761,7 @@ svgCauseLikelihoodPercent();
 			$( "#tabsSearchCountTotal" ).tabs();
 			$( "#tabsSearchRatePercentOfStops" ).tabs();
 			$( "#tabsSearchRatePercentTotal" ).tabs();
+			$( "#tabsCauseLikelihoodPercent" ).tabs();
 		});
 		</script>
 
@@ -704,12 +826,12 @@ svgCauseLikelihoodPercent();
 								</tr>
 								<tr id="tbodyRowCensusCountPercent">
 									<td>Percent</td>
-									<td>{{numberFormat agency.agencyPercentWhite "integer" "en_US"}}</td>
-									<td>{{numberFormat agency.agencyPercentBlack "integer" "en_US"}}</td>
-									<td>{{numberFormat agency.agencyPercentIndigenous "integer" "en_US"}}</td>
-									<td>{{numberFormat agency.agencyPercentAsian "integer" "en_US"}}</td>
-									<td>{{numberFormat agency.agencyPercentLatinx "integer" "en_US"}}</td>
-									<td>{{numberFormat agency.agencyPercentOther "integer" "en_US"}}</td>
+									<td>{{numberFormat agency.agencyPercentWhite "0.0" "en_US"}}%</td>
+									<td>{{numberFormat agency.agencyPercentBlack "0.0" "en_US"}}%</td>
+									<td>{{numberFormat agency.agencyPercentIndigenous "0.0" "en_US"}}%</td>
+									<td>{{numberFormat agency.agencyPercentAsian "0.0" "en_US"}}%</td>
+									<td>{{numberFormat agency.agencyPercentLatinx "0.0" "en_US"}}%</td>
+									<td>{{numberFormat agency.agencyPercentOther "0.0" "en_US"}}%</td>
 								</tr>
 							</tbody>
 						</table>
@@ -880,10 +1002,33 @@ svgCauseLikelihoodPercent();
 					</div>
 				</div>
 
-				<p class="font-style-italic ">Drag the cursor over the graph to see the race/ethnic composition breakdown for any given year. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+				<h3 class="w3-text-2017-navy-peony ">Likelihood of Search by "Stop Cause"</h3>
+				<p>This graph displays the likelihood of one race/ethnic composition group being searched as compared to another group for a given stop cause. Adjusting the drop down menu will display the likelihood of search relative to another race/ethnic composition group on a year-by-year basis. </p>
 				<div>
-					<svg id="svgCauseLikelihoodPercent" style="width: 600px; height: 400px; "></svg>
+					<div id="tabsCauseLikelihoodPercent">
+						<ul>
+							<li><a href="#tabsCauseLikelihoodPercent-1">Chart</a></li>
+							<li><a href="#tabsCauseLikelihoodPercent-2">Data</a></li>
+						</ul>
+						<div id="tabsCauseLikelihoodPercent-1">
+							<div>
+								<svg id="svgCauseLikelihoodPercent" style="width: 600px; height: 400px; "></svg>
+							</div>
+							<p class="font-style-italic ">Click the colored circles above the graph to display the comparisons between various race/ethnic composition groups. Some percentages may be based on low levels of observation. Click the "Data" tab to review the actual raw counts from the NC Department of Justice. </p>
+						</div>
+						<div id="tabsCauseLikelihoodPercent-2">
+							<table class="w3-table w3-striped w3-border w3-bordered w3-hoverable ">
+								<thead id="theadCauseLikelihoodPercent" class="font-weight-bold ">
+									<tr id="theadRowCauseLikelihoodPercent">
+									</tr>
+								</thead>
+								<tbody id="tbodyCauseLikelihoodPercent">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+
 				<div>
 					<svg id="svgContrabandHitRate" style="width: 600px; height: 400px; "></svg>
 				</div>
