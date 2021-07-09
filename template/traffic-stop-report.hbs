@@ -1,6 +1,6 @@
 
 {{#partial "head_content"}}
-		<title>Open Data Policing | </title>
+		<title>Open Data Policing | {{agencyTitle}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<link rel="stylesheet" href="{{staticBaseUrl}}/css/w3.css"/>
 		<link rel="stylesheet" href="{{staticBaseUrl}}/css/site-enUS.css"/>
@@ -667,6 +667,9 @@ function svgCauseLikelihoodPercent() {
 					.tooltips(true)
 					.transitionDuration(350)
 					.showControls(false)
+					.tooltipContent(function(key, stopCauseTitle, percent, graph) { 
+						return key.replace(' vs. White', ' people are ' + percent.replace('-', '') + ' ' + (percent.includes('-') ? 'less' : 'more') + ' likely to be searched for a <br/>"' + stopCauseTitle + '" stop cause than <br/>White people by the {{agencyTitle}}. ');
+					})
 					;
 
 				chart.yAxis
