@@ -251,7 +251,7 @@ function svgStopCountTotal(stopData) {
 }
 
 function svgSearchCountTotal(searchTypeTitle) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -278,7 +278,11 @@ function svgSearchCountTotal(searchTypeTitle) {
 				var a = pivotData.ranges.stopDateTime.counts[countKey];
 				var b = searchData.facet_ranges.stopDateTime.counts[countKey];
 				var c = a;
+				{{#if stopYear}}
+				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+				{{else}}
 				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				{{/if}}
 				var itemRangeValues = { x: year, y: c, series: i }
 				itemValues.push(itemRangeValues);
 			});
@@ -325,7 +329,9 @@ function svgSearchCountTotal(searchTypeTitle) {
 
 			chart.xAxis
 				.axisLabel('Date')
-				.tickFormat(d3.format('.0d'))
+				.tickFormat(function(monthNum){
+					return Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(2000, monthNum - 1, 1));
+				})
 				;
 
 			chart.yAxis
