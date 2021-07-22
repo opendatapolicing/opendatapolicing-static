@@ -118,13 +118,17 @@ function svgStopCountPercent(stopData) {
 			var a = pivotData.ranges.stopDateTime.counts[countKey];
 			var b = stopData.facet_ranges.stopDateTime.counts[countKey];
 			var c = b == 0 ? 0 : (a / b);
+			{{#if stopYear}}
+			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+			{{else}}
 			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+			{{/if}}
 			var itemRangeValues = { x: year, y: c, series: i }
 			itemValues.push(itemRangeValues);
 
 			var $yearRow = yearRows[year];
 			if(!$yearRow) {
-				$yearRow = $('<tr><td>' + year + '</td></tr>');
+				$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td></tr>');
 				$tbody.append($yearRow);
 				yearRows[year] = $yearRow;
 			}
@@ -150,8 +154,15 @@ function svgStopCountPercent(stopData) {
 			;
 
 		chart.xAxis
+			{{#if stopYear}}
+			.axisLabel('{{stopYear}} Month')
+			.tickFormat(function(monthNum){
+				return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
+			})
+			{{else}}
 			.axisLabel('Year')
 			.tickFormat(d3.format('.0d'))
+			{{/if}}
 			;
 
 		chart.yAxis
@@ -188,7 +199,11 @@ function svgStopCountTotal(stopData) {
 			var a = pivotData.ranges.stopDateTime.counts[countKey];
 			var b = stopData.facet_ranges.stopDateTime.counts[countKey];
 			var c = a;
+			{{#if stopYear}}
+			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+			{{else}}
 			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+			{{/if}}
 			var itemRangeValues = { x: year, y: c, series: i }
 			itemValues.push(itemRangeValues);
 		});
@@ -198,10 +213,14 @@ function svgStopCountTotal(stopData) {
 			var stopPurposeTitle = pivotData2.value;
 			countKeys2.forEach(function(countKey) {
 				var a = pivotData2.ranges.stopDateTime.counts[countKey];
+				{{#if stopYear}}
+				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+				{{else}}
 				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				{{/if}}
 				var $yearRow = yearRows[year + '-' + stopPurposeTitle];
 				if(!$yearRow) {
-					$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+					$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td><td>' + stopPurposeTitle + '</td></tr>');
 					$tbody.append($yearRow);
 					yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 				}
@@ -234,8 +253,15 @@ function svgStopCountTotal(stopData) {
 			;
 
 		chart.xAxis
+			{{#if stopYear}}
+			.axisLabel('{{stopYear}} Month')
+			.tickFormat(function(monthNum){
+				return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
+			})
+			{{else}}
 			.axisLabel('Year')
 			.tickFormat(d3.format('.0d'))
+			{{/if}}
 			;
 
 		chart.yAxis
@@ -292,10 +318,14 @@ function svgSearchCountTotal(searchTypeTitle) {
 				var stopPurposeTitle = pivotData2.value;
 				countKeys2.forEach(function(countKey) {
 					var a = pivotData2.ranges.stopDateTime.counts[countKey];
+					{{#if stopYear}}
+					var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+					{{else}}
 					var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+					{{/if}}
 					var $yearRow = yearRows[year + '-' + stopPurposeTitle];
 					if(!$yearRow) {
-						$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+						$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td><td>' + stopPurposeTitle + '</td></tr>');
 						$tbody.append($yearRow);
 						yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 					}
@@ -328,10 +358,15 @@ function svgSearchCountTotal(searchTypeTitle) {
 				;
 
 			chart.xAxis
-				.axisLabel('Date')
+				{{#if stopYear}}
+				.axisLabel('{{stopYear}} Month')
 				.tickFormat(function(monthNum){
-					return Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(2000, monthNum - 1, 1));
+					return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
 				})
+				{{else}}
+				.axisLabel('Year')
+				.tickFormat(d3.format('.0d'))
+				{{/if}}
 				;
 
 			chart.yAxis
@@ -348,7 +383,7 @@ function svgSearchCountTotal(searchTypeTitle) {
 }
 
 function svgSearchRatePercentOfStops(stopData) {
-	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -376,13 +411,17 @@ function svgSearchRatePercentOfStops(stopData) {
 					a = searchRaceTitleCount / stopRaceTitleCount;
 				if(a > 1)
 					a = 0.0;
+				{{#if stopYear}}
+				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+				{{else}}
 				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				{{/if}}
 				var itemRangeValues = { x: year, y: a, series: i }
 				itemValues.push(itemRangeValues);
 
 				var $yearRow = yearRows[year];
 				if(!$yearRow) {
-					$yearRow = $('<tr><td>' + year + '</td></tr>');
+					$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td></tr>');
 					$tbody.append($yearRow);
 					yearRows[year] = $yearRow;
 				}
@@ -394,7 +433,11 @@ function svgSearchRatePercentOfStops(stopData) {
 		countKeys.forEach(function(countKey) {
 			var stopRangeCount = stopData.facet_ranges.stopDateTime.counts[countKey];
 			var searchRangeCount = searchData.facet_ranges.stopDateTime.counts[countKey];
+			{{#if stopYear}}
+			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+			{{else}}
 			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+			{{/if}}
 			var $yearRow = yearRows[year];
 			if($yearRow) {
 				$yearRow.append('<td>' + searchRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + stopRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
@@ -414,8 +457,15 @@ function svgSearchRatePercentOfStops(stopData) {
 				;
 
 			chart.xAxis
+				{{#if stopYear}}
+				.axisLabel('{{stopYear}} Month')
+				.tickFormat(function(monthNum){
+					return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
+				})
+				{{else}}
 				.axisLabel('Year')
 				.tickFormat(d3.format('.0d'))
+				{{/if}}
 				;
 
 			chart.yAxis
@@ -478,7 +528,7 @@ function svgSearchRatePie() {
 }
 
 function svgSearchRatePercentTotal() {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -500,16 +550,22 @@ function svgSearchRatePercentTotal() {
 			$theadRow.append('<th>' + pivotData.value + '</th>')
 
 			Object.keys(pivotData.ranges.stopDateTime.counts).forEach(function(countKey) {
+
+				{{#if stopYear}}
+				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+				{{else}}
+				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				{{/if}}
+
 				var a = pivotData.ranges.stopDateTime.counts[countKey];
 				var b = searchData.facet_ranges.stopDateTime.counts[countKey];
 				var c = b == 0 ? 0 : (a / b);
-				var itemRangeValues = { x: parseInt(countKey.substr(0, countKey.indexOf('-'))), y: c, series: i }
+				var itemRangeValues = { x: parseInt(countKey.substr(0, year)), y: c, series: i }
 				itemValues.push(itemRangeValues);
 
-				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
 				var $yearRow = yearRows[year];
 				if(!$yearRow) {
-					$yearRow = $('<tr><td>' + year + '</td></tr>');
+					$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td></tr>');
 					$tbody.append($yearRow);
 					yearRows[year] = $yearRow;
 				}
@@ -535,8 +591,15 @@ function svgSearchRatePercentTotal() {
 				;
 
 			chart.xAxis
+				{{#if stopYear}}
+				.axisLabel('{{stopYear}} Month')
+				.tickFormat(function(monthNum){
+					return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
+				})
+				{{else}}
 				.axisLabel('Year')
 				.tickFormat(d3.format('.0d'))
+				{{/if}}
 				;
 
 			chart.yAxis
@@ -554,13 +617,13 @@ function svgSearchRatePercentTotal() {
 }
 
 function svgCauseLikelihoodPercent() {
-	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
+	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
 	$.get(url1, function( stopData ) {
-		var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
+		var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
 				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -614,10 +677,14 @@ function svgCauseLikelihoodPercent() {
 					countKeys2.forEach(function(countKey) {
 						var a = pivotData2.ranges.stopDateTime.counts[countKey];
 						var b = pivotData.ranges.stopDateTime.counts[countKey];
+						{{#if stopYear}}
+						var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+						{{else}}
 						var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+						{{/if}}
 						var $yearRow = yearRows[year + '-' + stopPurposeTitle];
 						if(!$yearRow) {
-							$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+							$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td><td>' + stopPurposeTitle + '</td></tr>');
 							$tbody.append($yearRow);
 							yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 						}
@@ -675,13 +742,13 @@ function svgCauseLikelihoodPercent() {
 }
 
 function svgContrabandHitRate() {
-	var url1 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var url1 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
 		+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 		+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 		+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 		;
 	$.get(url1, function( searchData ) {
-		var url2 = "/api/contraband?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+		var url2 = "/api/contraband?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
 				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -714,10 +781,14 @@ function svgContrabandHitRate() {
 				countKeys.forEach(function(countKey) {
 					var a = pivotData.ranges.stopDateTime.counts[countKey];
 					var b = searchData.facet_pivot['personRaceTitle'][i].ranges.stopDateTime.counts[countKey];
+					{{#if stopYear}}
+					var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+					{{else}}
 					var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+					{{/if}}
 					var $yearRow = yearRows[year];
 					if(!$yearRow) {
-						$yearRow = $('<tr><td>' + year + '</td></tr>');
+						$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td></tr>');
 						$tbody.append($yearRow);
 						yearRows[year] = $yearRow;
 					}
@@ -823,7 +894,11 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 			var a = pivotData.ranges.stopDateTime.counts[countKey];
 			var b = stopUseOfForceData.facet_ranges.stopDateTime.counts[countKey];
 			var c = a;
+			{{#if stopYear}}
+			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+			{{else}}
 			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+			{{/if}}
 			var itemRangeValues = { x: year, y: c, series: i }
 			itemValues.push(itemRangeValues);
 		});
@@ -833,14 +908,19 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 			var stopPurposeTitle = pivotData2.value;
 			countKeys2.forEach(function(countKey) {
 				var a = pivotData2.ranges.stopDateTime.counts[countKey];
+				{{#if stopYear}}
+				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+				{{else}}
 				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+				{{/if}}
 				var $yearRow = yearRows[year + '-' + stopPurposeTitle];
+				var yearStr = {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}};
 				if(!$yearRow) {
-					$yearRow = $('<tr><td>' + year + '</td><td>' + stopPurposeTitle + '</td></tr>');
+					$yearRow = $('<tr><td>' + yearStr + '</td><td>' + stopPurposeTitle + '</td></tr>');
 					$tbody.append($yearRow);
 					yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 				}
-				$yearRow.append('<td>' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				$yearRow.append('<td title="There were ' + a + ' ' + pivotData.value + ' ' + pivotData2.value + ' stops using force in ' + yearStr + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 			});
 			var $totalRow = totalRows[stopPurposeTitle];
 			if(!$totalRow) {
@@ -869,8 +949,15 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 			;
 
 		chart.xAxis
+			{{#if stopYear}}
+			.axisLabel('{{stopYear}} Month')
+			.tickFormat(function(monthNum){
+				return Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, monthNum - 1, 1));
+			})
+			{{else}}
 			.axisLabel('Year')
 			.tickFormat(d3.format('.0d'))
+			{{/if}}
 			;
 
 		chart.yAxis
@@ -896,13 +983,13 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 			$( "#tabsContrabandHitRate" ).tabs();
 			$( "#tabsUseOfForceTotal" ).tabs();
 
-			var url1 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
+			var url1 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
 					+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 					+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 					+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 					;
 			$.get(url1, function( stopData ) {
-				var url2 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1YEAR&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&fq=stopEngageForce:true&facet.field=personRaceTitles"
+				var url2 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&fq=stopEngageForce:true&facet.field=personRaceTitles"
 						+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 						+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 						+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
