@@ -882,37 +882,36 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 	$theadRow.append('<th>Stop Purpose</th>')
 	var yearRows = {}
 	var totalRows = {}
-	for (i = 0; i < stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'].length; i++) {
-		var pivotData = stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'][i];
+	Object.keys(stopUseOfForceData.facet_fields['personRaceTitles']).forEach(function(personRaceTitle) {
+		var pivotData = stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
 		var itemValues = [];
-		var itemData = { key: pivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(pivotData.value) };
-		var countKeys = Object.keys(pivotData.ranges.stopDateTime.counts);
+		var itemData = { key: personRaceTitle, seriesIndex: i, values: itemValues, color: personRaceColor(personRaceTitle) };
+	
+		$theadRow.append('<th>' + personRaceTitle + '</th>')
 
-		$theadRow.append('<th>' + pivotData.value + '</th>')
-
-		countKeys.forEach(function(countKey) {
-			var a = pivotData.ranges.stopDateTime.counts[countKey];
-			var b = stopUseOfForceData.facet_ranges.stopDateTime.counts[countKey];
-			var c = a;
-			{{#if stopYear}}
-			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
-			{{else}}
-			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
-			{{/if}}
-			var itemRangeValues = { x: year, y: c, series: i }
-			itemValues.push(itemRangeValues);
-		});
-
-		pivotData.pivot.forEach(function(pivotData2) {
-			var countKeys2 = Object.keys(pivotData2.ranges.stopDateTime.counts);
-			var stopPurposeTitle = pivotData2.value;
-			countKeys2.forEach(function(countKey) {
-				var a = pivotData2.ranges.stopDateTime.counts[countKey];
+		if(pivotData != null) {
+			var countKeys = Object.keys(pivotData.ranges.stopDateTime.counts);
+			countKeys.forEach(function(countKey) {
+				var a = pivotData.ranges.stopDateTime.counts[countKey];
+				var b = stopUseOfForceData.facet_ranges.stopDateTime.counts[countKey];
+				var c = a;
 				{{#if stopYear}}
 				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
 				{{else}}
 				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
 				{{/if}}
+				var itemRangeValues = { x: year, y: c, series: i }
+				itemValues.push(itemRangeValues);
+			});
+		}
+
+		var pivotData2 = null;
+		if(pivotData != null) {
+			pivotData2 = stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
+		}
+		Object.keys(stopUseOfForceData.facet_fields['stopPurposeTitle']).forEach(function(stopPurposeTitle) {
+			Object.keys({{#if stopYear}}[1,2,3,4,5,6,7,8,9,10,11,12]{{else}}stopUseOfForceData.facet_fields['stopYear']){{/if}}.forEach(function(year) {
+				var a = pivotData2 ? pivotData2.ranges.stopDateTime.counts[countKey] : 0;
 				var $yearRow = yearRows[year + '-' + stopPurposeTitle];
 				var yearStr = {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}};
 				if(!$yearRow) {
@@ -920,20 +919,40 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 					$tbody.append($yearRow);
 					yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 				}
-				$yearRow.append('<td title="There were ' + a + ' ' + pivotData.value + ' ' + pivotData2.value + ' stops using force in ' + yearStr + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				$yearRow.append('<td title="There were ' + a + ' ' + personRaceTitle + ' ' + pivotData2.value + ' stops using force in ' + yearStr + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 			});
-			var $totalRow = totalRows[stopPurposeTitle];
-			if(!$totalRow) {
-				$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
-				totalRows[stopPurposeTitle] = $totalRow;
-			}
-			$totalRow.append('<td>' + pivotData2.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+			if(pivotData != null) {
+				var pivotData2 = stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
+				var countKeys2 = Object.keys(pivotData2.ranges.stopDateTime.counts);
+				countKeys2.forEach(function(countKey) {
+					var a = pivotData2.ranges.stopDateTime.counts[countKey];
+					{{#if stopYear}}
+					var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
+					{{else}}
+					var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
+					{{/if}}
+					var $yearRow = yearRows[year + '-' + stopPurposeTitle];
+					var yearStr = {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}};
+					if(!$yearRow) {
+						$yearRow = $('<tr><td>' + yearStr + '</td><td>' + stopPurposeTitle + '</td></tr>');
+						$tbody.append($yearRow);
+						yearRows[year + '-' + stopPurposeTitle] = $yearRow;
+					}
+					$yearRow.append('<td title="There were ' + a + ' ' + personRaceTitle + ' ' + pivotData2.value + ' stops using force in ' + yearStr + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+				});
+				var $totalRow = totalRows[stopPurposeTitle];
+				if(!$totalRow) {
+					$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
+					totalRows[stopPurposeTitle] = $totalRow;
+				}
+				$totalRow.append('<td>' + pivotData2.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+			});
 		});
 		Object.keys(totalRows).forEach(function(key) {
 			$tbody.append(totalRows[key]);
 		});
 		graphData.push(itemData);
-	}
+	});
 
 	nv.addGraph(function() {
 		var chart = nv.models.lineChart()
@@ -983,13 +1002,13 @@ function svgUseOfForceTotal(stopUseOfForceData) {
 			$( "#tabsContrabandHitRate" ).tabs();
 			$( "#tabsUseOfForceTotal" ).tabs();
 
-			var url1 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle"
+			var url1 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&facet.field=personRaceTitles&facet.field=stopPurposeTitle&facet.field=stopYear"
 					+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 					+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 					+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 					;
 			$.get(url1, function( stopData ) {
-				var url2 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&fq=stopEngageForce:true&facet.field=personRaceTitles"
+				var url2 = "{{siteBaseUrl}}/api/traffic-stop?rows=0&facet=true&facet.mincount=0&facet.pivot.mincount=0&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&fq=stopEngageForce:true&facet.field=personRaceTitles&facet.field=stopPurposeTitle&facet.field=stopYear"
 						+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 						+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 						+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
