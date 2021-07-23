@@ -4,13 +4,13 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<meta name="keywords" content="">
-		<script src="{{staticBaseUrl}}/js/sockjs.js"></script>
-		<script src="{{staticBaseUrl}}/js/vertx-eventbus.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficStopPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficPersonPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/TrafficSearchPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/SearchBasisPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/ContrabandPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/sockjs.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/vertx-eventbus.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/TrafficStopPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/TrafficPersonPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/TrafficSearchPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/SearchBasisPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/ContrabandPage.js"></script>
 
 		<script>//<![CDATA[
 		$(document).ready(function() {
@@ -89,7 +89,7 @@
 				<div id="state-list" class="w3-row" style="height: 208px; ">
 					{{#each states}}
 					<div class="w3-rest ">
-						<img src="{{staticBaseUrl}}/svg/state-{{stateAbbreviation}}.svg" class="state-img w3-img " style="height: 128px; "/>
+						<img src="{{STATIC_BASE_URL}}/svg/state-{{stateAbbreviation}}.svg" class="state-img w3-img " style="height: 128px; "/>
 						<p><span class="state-stop-count ">{{stopCountStr}}</span><span> stops</span></p>
 						<a class="state-search-link " href="/state/{{objectId}}" class="w3-btn ">{{stateName}} {{stateAbbreviation}}</a>
 					</div>
@@ -98,7 +98,7 @@
 			</div>
 		</div>
 
-		<div class="w3-text-white " style="background-image: url('{{staticBaseUrl}}/jpg/cars-at-day.jpg'); background-size: cover; text-shadow: 1px 1px 0 #444; ">
+		<div class="w3-text-white " style="background-image: url('{{STATIC_BASE_URL}}/jpg/cars-at-day.jpg'); background-size: cover; text-shadow: 1px 1px 0 #444; ">
 			<div class="w3-content ">
 				<div class="w3-roww3-padding-32 ">
 					<div class="w3-rest ">

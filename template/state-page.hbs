@@ -4,10 +4,10 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<meta name="keywords" content="">
-		<script src="{{staticBaseUrl}}/js/sockjs.js"></script>
-		<script src="{{staticBaseUrl}}/js/vertx-eventbus.js"></script>
-		<script src="{{staticBaseUrl}}/js/enUS/SiteAgencyPage.js"></script>
-		<script src="{{staticBaseUrl}}/js/jQuery-Autocomplete/jquery.autocomplete.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/sockjs.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/vertx-eventbus.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/enUS/SiteAgencyPage.js"></script>
+		<script src="{{STATIC_BASE_URL}}/js/jQuery-Autocomplete/jquery.autocomplete.js"></script>
 
 		<script>
 		$(function() {
@@ -48,7 +48,7 @@
 						<p>Browse all known traffic stops to have occured in {{state.stateName}} since {{beginStopDateTime}}</p>
 					</div>
 					<div class="w3-quarter ">
-						<img src="{{staticBaseUrl}}/svg/state-{{state.stateAbbreviation}}.svg" class="state-img w3-img " style="height: 128px; "/>
+						<img src="{{STATIC_BASE_URL}}/svg/state-{{state.stateAbbreviation}}.svg" class="state-img w3-img " style="height: 128px; "/>
 					</div>
 				</div>
 			</div>
