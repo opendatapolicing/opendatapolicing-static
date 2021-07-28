@@ -619,126 +619,125 @@ function svgSearchRatePercentTotal(stopData, stopUseOfForceData) {
 }
 
 function svgCauseLikelihoodPercent(stopData, stopUseOfForceData) {
-	var url1 = "/api/traffic-stop?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitles,stopPurposeTitle&facet.field=stopPurposeTitle"
+	var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
-	$.get(url1, function( stopData ) {
-		var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
-				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
-				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
-				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
-				;
-		$.get(url2, function( searchData ) {
-			var $theadRow = $('#theadRowCauseLikelihoodPercent');
-			var $tbody = $('#tbodyCauseLikelihoodPercent');
-			$theadRow.empty();
-			$theadRow.append('<th>Year</th>')
-			$theadRow.append('<th>Stop Purpose</th>')
-			var yearRows = {}
-			var totalRows = {}
-			var whiteSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === 'White');
-			var whiteStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === 'White')
-			var graphData = [];
-			for (i = 0; i < searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].length; i++) {
-				var currentSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'][i];
+	$.get(url2, function( searchData ) {
+		var $theadRow = $('#theadRowCauseLikelihoodPercent');
+		var $tbody = $('#tbodyCauseLikelihoodPercent');
+		$theadRow.empty();
+		$theadRow.append('<th>Year</th>')
+		$theadRow.append('<th>Stop Purpose</th>')
+		var yearRows = {}
+		var totalRows = {}
+		var whiteSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === 'White');
+		var whiteStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === 'White')
+		var graphData = [];
+		Object.keys(stopData.facet_fields.personRaceTitles).forEach(function(personRaceTitle) {
+			var currentSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === personRaceTitle);
+			var currentStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
 
-				if(currentSearchPivotData.value != 'White') {
-					var itemValues = [];
-					var itemData = { key: currentSearchPivotData.value + ' vs. White', seriesIndex: i, values: itemValues };
-					for (j = 0; j < currentSearchPivotData.pivot.length; j++) {
-						var currentSearchRangeData = currentSearchPivotData.pivot[j];
-						var whiteSearchRangeData = whiteSearchPivotData.pivot.find(x => x.value === currentSearchRangeData.value);
-						var currentStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === currentSearchPivotData.value);
-						if(currentStopPivotData && currentStopPivotData.pivot) {
-							var a = currentSearchRangeData.count;
-							var b = currentStopPivotData.pivot.find(x => x.value === currentSearchRangeData.value).count;
-							var c = b == 0 ? 0 : (a / b);
-							var aWhite = whiteSearchRangeData.count;
-							var bWhite = whiteStopPivotData.pivot.find(x => x.value === currentSearchRangeData.value).count;
-							var cWhite = bWhite == 0 ? 0 : (aWhite / bWhite);
-							var z = (c - cWhite)/cWhite;
-							if(!c || !isFinite(z))
-								z = 0;
-							var itemRangeValues = { label: currentSearchRangeData.value, value: z }
-							itemValues.push(itemRangeValues);
-						}
-					}
-					graphData.push(itemData);
+			$theadRow.append('<th>' + personRaceTitle + '</th>')
+
+			var itemValues = [];
+			var itemData = { key: personRaceTitle + ' vs. White', seriesIndex: i, values: itemValues };
+			Object.keys(stopData.facet_fields['stopPurposeTitle']).forEach(function(stopPurposeTitle) {
+				var currentSearchRangeData = null;
+				if(currentSearchPivotData != null) {
+					currentSearchRangeData = currentSearchPivotData.pivot.find(x => x.value === stopPurposeTitle);
 				}
-			}
-			for (i = 0; i < searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].length; i++) {
-				var pivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'][i];
-	
-				$theadRow.append('<th>' + pivotData.value + '</th>')
-	
-				pivotData.pivot.forEach(function(pivotData2) {
-					var countKeys2 = Object.keys(pivotData2.ranges.stopDateTime.counts);
-					var stopPurposeTitle = pivotData2.value;
-					countKeys2.forEach(function(countKey) {
-						var a = pivotData2.ranges.stopDateTime.counts[countKey];
-						var b = pivotData.ranges.stopDateTime.counts[countKey];
-						{{#if stopYear}}
-						var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
-						{{else}}
-						var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
-						{{/if}}
-						var $yearRow = yearRows[year + '-' + stopPurposeTitle];
-						if(!$yearRow) {
-							$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td><td>' + stopPurposeTitle + '</td></tr>');
-							$tbody.append($yearRow);
-							yearRows[year + '-' + stopPurposeTitle] = $yearRow;
-						}
-						$yearRow.append('<td title="' + pivotData.value + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '/' + b.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
-					});
-					var $totalRow = totalRows[stopPurposeTitle];
-					if(!$totalRow) {
-						$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
-						totalRows[stopPurposeTitle] = $totalRow;
+				var currentStopRangeData = null;
+				if(currentStopPivotData != null) {
+					currentStopRangeData = currentStopPivotData.pivot.find(x => x.value === stopPurposeTitle);
+				}
+				var whiteSearchRangeData = null;
+				if(whiteSearchPivotData) {
+					whiteSearchRangeData = whiteSearchPivotData.pivot.find(x => x.value === stopPurposeTitle);
+				}
+				var whiteStopRangeData = null;
+				if(whiteStopPivotData) {
+					whiteStopRangeData = whiteStopPivotData.pivot.find(x => x.value === stopPurposeTitle);
+				}
+
+				var a = currentSearchRangeData ? currentSearchRangeData.count : 0;
+				var b = currentStopRangeData ? currentStopRangeData.count : 0;
+				var c = b == 0 ? 0 : (a / b);
+				if(personRaceTitle != 'White') {
+					var aWhite = whiteSearchRangeData ? whiteSearchRangeData.count : 0;
+					var bWhite = whiteStopRangeData && currentSearchRangeData ? whiteStopRangeData.count : 0;
+					var cWhite = bWhite == 0 ? 0 : (aWhite / bWhite);
+					var z = (c - cWhite)/cWhite;
+					if(!c || !isFinite(z))
+						z = 0;
+					var itemRangeValues = { label: stopPurposeTitle, value: z }
+					itemValues.push(itemRangeValues);
+				}
+
+				{{#if stopYear}}[1,2,3,4,5,6,7,8,9,10,11,12]{{else}}Object.keys(stopData.facet_fields['stopYear']){{/if}}.forEach(function(year) {
+					var countKey = currentStopRangeData ? Object.keys(currentStopRangeData.ranges.stopDateTime.counts).find(x => x.startsWith({{#if stopYear}}'{{stopYear}}-' + year.toString().padStart(2, '0'){{else}}year{{/if}})): null;
+					var a2 = countKey && currentSearchRangeData ? currentSearchRangeData.ranges.stopDateTime.counts[countKey] : 0;
+					var b2 = countKey && currentStopRangeData ? currentStopRangeData.ranges.stopDateTime.counts[countKey] : 0;
+					if(!b2)
+						b2 = 0;
+					var $yearRow = yearRows[year + '-' + stopPurposeTitle];
+					if(!$yearRow) {
+						$yearRow = $('<tr><td>' + {{#if stopYear}}Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(2000, year - 1, 1)) + ' {{stopYear}}'{{else}}year{{/if}} + '</td><td>' + stopPurposeTitle + '</td></tr>');
+						$tbody.append($yearRow);
+						yearRows[year + '-' + stopPurposeTitle] = $yearRow;
 					}
-					$totalRow.append('<td title="' + pivotData.value + '">' + pivotData2.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '/' + pivotData.count.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
+					$yearRow.append('<td title="' + personRaceTitle + '">' + a2.toLocaleString('en-US', {maximumFractionDigits:0}) + '/' + b2.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 				});
-				Object.keys(totalRows).forEach(function(key) {
-					$tbody.append(totalRows[key]);
-				});
-			}
-
-			nv.addGraph(function() {
-				var chart = nv.models.multiBarHorizontalChart()
-					.x((d) => d.label)
-					.y((d) => d.value)
-					.margin({top: 20, right: 50, bottom: 20, left: 180})
-					.showValues(true)
-					.tooltips(true)
-					.transitionDuration(350)
-					.showControls(false)
-					.tooltipContent(function(key, stopCauseTitle, percent, graph) { 
-						return key.replace(' vs. White', ' people are ' + percent.replace('-', '') + ' ' + (percent.includes('-') ? 'less' : 'more') + ' likely to be searched for a <br/>"' + stopCauseTitle + '" stop cause than <br/>White people by the {{agencyTitle}}. ');
-					})
-					;
-
-				chart.yAxis
-					.axisLabel('Additional percentage or search by search-cause')
-					.tickFormat(d3.format('%'));
-					;
-
-				chart
-					.valueFormat(d3.format('%'));
-					;
-
-				d3.select('#svgCauseLikelihoodPercent')
-					.datum(graphData)
-					.attr('width', "100%")
-					.attr('height', "100%")
-					.attr('preserveAspectRatio', "xMinYMin")
-					.call(chart)
-					;
-
-				nv.utils.windowResize(chart.update);
-
-				return chart;
+				var $totalRow = totalRows[stopPurposeTitle];
+				if(!$totalRow) {
+					$totalRow = $('<tr><td>Total</td><td>' + stopPurposeTitle + '</td></tr>');
+					totalRows[stopPurposeTitle] = $totalRow;
+				}
+				$totalRow.append('<td title="' + personRaceTitle + '">' + a.toLocaleString('en-US', {maximumFractionDigits:0}) + '/' + b.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 			});
+			if(personRaceTitle != 'White') {
+				graphData.push(itemData);
+			}
+			Object.keys(totalRows).forEach(function(key) {
+				$tbody.append(totalRows[key]);
+			});
+		});
+
+		nv.addGraph(function() {
+			var chart = nv.models.multiBarHorizontalChart()
+				.x((d) => d.label)
+				.y((d) => d.value)
+				.margin({top: 20, right: 50, bottom: 20, left: 180})
+				.showValues(true)
+				.tooltips(true)
+				.transitionDuration(350)
+				.showControls(false)
+				.tooltipContent(function(key, stopCauseTitle, percent, graph) { 
+					return key.replace(' vs. White', ' people are ' + percent.replace('-', '') + ' ' + (percent.includes('-') ? 'less' : 'more') + ' likely to be searched for a <br/>"' + stopCauseTitle + '" stop cause than <br/>White people by the {{agencyTitle}}. ');
+				})
+				;
+
+			chart.yAxis
+				.axisLabel('Additional percentage or search by search-cause')
+				.tickFormat(d3.format('%'));
+				;
+
+			chart
+				.valueFormat(d3.format('%'));
+				;
+
+			d3.select('#svgCauseLikelihoodPercent')
+				.datum(graphData)
+				.attr('width', "100%")
+				.attr('height', "100%")
+				.attr('preserveAspectRatio', "xMinYMin")
+				.call(chart)
+				;
+
+			nv.utils.windowResize(chart.update);
+
+			return chart;
 		});
 	});
 }
@@ -885,7 +884,7 @@ function svgUseOfForceTotal(stopData, stopUseOfForceData) {
 	var yearRows = {}
 	var totalRows = {}
 	var i = 0;
-	Object.keys(stopData.facet_fields['personRaceTitles']).forEach(function(personRaceTitle) {
+	Object.keys(stopData.facet_fields.personRaceTitles).forEach(function(personRaceTitle) {
 		var pivotData = stopUseOfForceData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
 		var itemValues = [];
 		var itemData = { key: personRaceTitle, seriesIndex: i, values: itemValues, color: personRaceColor(personRaceTitle) };
