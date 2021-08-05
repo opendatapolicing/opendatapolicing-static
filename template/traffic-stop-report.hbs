@@ -269,7 +269,7 @@ function svgStopCountTotal(stopData, stopUseOfForceData) {
 }
 
 function svgSearchCountTotal(stopData, stopUseOfForceData) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle&facet.field=searchTypeTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,searchTypeTitle&facet.field=searchTypeTitle&fq=personTypeId:D"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -372,7 +372,8 @@ function svgSearchCountTotal(stopData, stopUseOfForceData) {
 }
 
 function svgSearchRatePercentOfStops(stopData, stopUseOfForceData) {
-	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var searchUrl = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle&facet.field=personRaceTitle&fq=personTypeId:D"
+			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 			;
@@ -383,28 +384,27 @@ function svgSearchRatePercentOfStops(stopData, stopUseOfForceData) {
 		$theadRow.empty();
 		$theadRow.append('<th>Year</th>')
 		var yearRows = {}
-		for (i = 0; i < stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].length; i++) {
-			var stopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'][i];
-			var searchPivotData = searchData.facet_pivot['personRaceTitle'][i];
+		var $totalRow = $('<tr><td>Total</td></tr>');
+		var i = 0;
+
+		Object.keys(stopData.facet_fields.personRaceTitles).forEach(function(personRaceTitle) {
+			var stopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
+			var searchPivotData = searchData.facet_pivot['personRaceTitle'].find(x => x.value === personRaceTitle);
 			var itemValues = [];
-			var itemData = { key: stopPivotData.value, seriesIndex: i, values: itemValues, color: personRaceColor(stopPivotData.value) };
+			var itemData = { key: personRaceTitle, seriesIndex: i, values: itemValues, color: personRaceColor(personRaceTitle) };
 			var countKeys = Object.keys(stopPivotData.ranges.stopDateTime.counts);
 
-			$theadRow.append('<th>' + stopPivotData.value + '</th>')
+			$theadRow.append('<th>' + personRaceTitle + '</th>');
 
-			countKeys.forEach(function(countKey) {
+			{{#if stopYear}}[1,2,3,4,5,6,7,8,9,10,11,12]{{else}}Object.keys(stopData.facet_fields['stopYear']){{/if}}.forEach(function(year) {
+				var countKey = stopData ? Object.keys(stopData.facet_ranges.stopDateTime.counts).find(x => x.startsWith({{#if stopYear}}'{{stopYear}}-' + year.toString().padStart(2, '0'){{else}}year{{/if}})): null;
 				var a = 0;
-				var stopRaceTitleCount = stopPivotData.ranges.stopDateTime.counts[countKey];
-				var searchRaceTitleCount = searchPivotData.ranges.stopDateTime.counts[countKey];
+				var stopRaceTitleCount = stopPivotData ? stopPivotData.ranges.stopDateTime.counts[countKey] : 0;
+				var searchRaceTitleCount = searchPivotData ? searchPivotData.ranges.stopDateTime.counts[countKey] : 0;
 				if(stopRaceTitleCount && searchRaceTitleCount)
 					a = searchRaceTitleCount / stopRaceTitleCount;
 				if(a > 1)
 					a = 0.0;
-				{{#if stopYear}}
-				var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
-				{{else}}
-				var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
-				{{/if}}
 				var itemRangeValues = { x: year, y: a, series: i }
 				itemValues.push(itemRangeValues);
 
@@ -416,17 +416,14 @@ function svgSearchRatePercentOfStops(stopData, stopUseOfForceData) {
 				}
 				$yearRow.append('<td>' + searchRaceTitleCount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + stopRaceTitleCount.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 			});
+			$totalRow.append('<td>' + (searchPivotData ? searchPivotData.count : 0).toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + (stopPivotData ? stopPivotData.count : 0).toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
 			graphData.push(itemData);
-		}
-		var rangeCountKeys = Object.keys(stopData.facet_ranges.stopDateTime.counts);
-		countKeys.forEach(function(countKey) {
+		});
+		$tbody.append($totalRow);
+		{{#if stopYear}}[1,2,3,4,5,6,7,8,9,10,11,12]{{else}}Object.keys(stopData.facet_fields['stopYear']){{/if}}.forEach(function(year) {
+			var countKey = stopData ? Object.keys(stopData.facet_ranges.stopDateTime.counts).find(x => x.startsWith({{#if stopYear}}'{{stopYear}}-' + year.toString().padStart(2, '0'){{else}}year{{/if}})): null;
 			var stopRangeCount = stopData.facet_ranges.stopDateTime.counts[countKey];
 			var searchRangeCount = searchData.facet_ranges.stopDateTime.counts[countKey];
-			{{#if stopYear}}
-			var year = parseInt(countKey.substr(5, countKey.indexOf('-', 5)));
-			{{else}}
-			var year = parseInt(countKey.substr(0, countKey.indexOf('-')));
-			{{/if}}
 			var $yearRow = yearRows[year];
 			if($yearRow) {
 				$yearRow.append('<td>' + searchRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' / ' + stopRangeCount.toLocaleString('en-US', {maximumFractionDigits:0}) + '</td>');
@@ -472,7 +469,7 @@ function svgSearchRatePercentOfStops(stopData, stopUseOfForceData) {
 }
 
 function svgSearchRatePie(stopData, stopUseOfForceData) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.field=personRaceTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.field=personRaceTitle&fq=personTypeId:D"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -517,7 +514,7 @@ function svgSearchRatePie(stopData, stopUseOfForceData) {
 }
 
 function svgSearchRatePercentTotal(stopData, stopUseOfForceData) {
-	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var url = "{{siteBaseUrl}}/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle&fq=personTypeId:D"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -602,7 +599,7 @@ function svgSearchRatePercentTotal(stopData, stopUseOfForceData) {
 }
 
 function svgCauseLikelihoodPercent(stopData, stopUseOfForceData) {
-	var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle"
+	var url2 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle,stopPurposeTitle&facet.field=stopPurposeTitle&fq=personTypeId:D"
 			+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 			+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 			+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
@@ -618,6 +615,8 @@ function svgCauseLikelihoodPercent(stopData, stopUseOfForceData) {
 		var whiteSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === 'White');
 		var whiteStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === 'White')
 		var graphData = [];
+		var i = 0;
+
 		Object.keys(stopData.facet_fields.personRaceTitles).forEach(function(personRaceTitle) {
 			var currentSearchPivotData = searchData.facet_pivot['personRaceTitle,stopPurposeTitle'].find(x => x.value === personRaceTitle);
 			var currentStopPivotData = stopData.facet_pivot['personRaceTitles,stopPurposeTitle'].find(x => x.value === personRaceTitle);
@@ -726,13 +725,13 @@ function svgCauseLikelihoodPercent(stopData, stopUseOfForceData) {
 }
 
 function svgContrabandHitRate(stopData, stopUseOfForceData) {
-	var url1 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+	var url1 = "/api/traffic-search?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle&fq=personTypeId:D"
 		+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 		+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 		+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
 		;
 	$.get(url1, function( searchData ) {
-		var url2 = "/api/contraband?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle"
+		var url2 = "/api/contraband?rows=0&facet=true&facet.sort=index&facet.range.start={{startDateStr}}&facet.range.end={{endDateStr}}&facet.range.gap=%2B1{{#if stopYear}}MONTH{{else}}YEAR{{/if}}&facet.range={!tag=r1}stopDateTime&facet.pivot={!range=r1}personRaceTitle&fq=personTypeId:D"
 				+ "&fq=stopDateTime:[{{urlencode startDateStr}} TO {{urlencode endDateStr}}]"
 				+ "{{#if stateAbbreviation}}&fq=stateAbbreviation:{{urlencode stateAbbreviation}}{{/if}}"
 				+ "{{#if agencyTitle}}&fq=agencyTitle:{{urlencode agencyTitle}}{{/if}}"
