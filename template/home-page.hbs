@@ -30,7 +30,7 @@
 
 		function registerHandlerHomePage(tableName, success) {
 			window.eventBus.registerHandler('websocket' + tableName, function (error, message) {
-				var json = message.body;
+				var json = JSON.parse(message.body);
 				var id = json['id'];
 				var pk = json['pk'];
 				var pkPage = $('#' + tableName + 'Form :input[name=pk]').val();
